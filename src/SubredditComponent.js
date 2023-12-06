@@ -50,26 +50,11 @@ const SubredditComponent = () => {
                     setLoadMore(false); // Reset loadMore flag
                 });
         }
-    }, [debouncedSubreddit, category, includeNSFW, after, loadMore]); // Add includeNSFW as a dependency
+    },
+    // eslint-disable-next-line 
+    [debouncedSubreddit, category, includeNSFW, after, loadMore]); // Add includeNSFW as a dependency
 
-    const handleScroll = () => {
-        // console.log("handleScroll")
-        const scrollPosition = window.innerHeight + document.documentElement.scrollTop;
-        const threshold = document.documentElement.offsetHeight - 100; // Adjust as needed
-        // console.log("handleScroll:scrollPosition:" + scrollPosition)
-        // console.log("handleScroll:threshold:" + threshold)
-        // console.log("handleScroll:isLoading:" + isLoading)
-
-        if (scrollPosition >= threshold && !isLoading) {
-            // console.log("handleScroll:loadMore:" + loadMore)
-            setLoadMore(true);
-        }
-    };
-
-    const loadMorePosts = () => {
-        setIsLoading(true); // Set loading to true to prevent multiple requests
-        // API call is made in useEffect which listens to changes in `after` state
-    };
+    
 
     const newSubreddit = (s) => {
         console.log("newSubreddit")
@@ -97,6 +82,19 @@ const SubredditComponent = () => {
     }
 
     useEffect(() => {
+        const handleScroll = () => {
+            // console.log("handleScroll")
+            const scrollPosition = window.innerHeight + document.documentElement.scrollTop;
+            const threshold = document.documentElement.offsetHeight - 100; // Adjust as needed
+            // console.log("handleScroll:scrollPosition:" + scrollPosition)
+            // console.log("handleScroll:threshold:" + threshold)
+            // console.log("handleScroll:isLoading:" + isLoading)
+    
+            if (scrollPosition >= threshold && !isLoading) {
+                // console.log("handleScroll:loadMore:" + loadMore)
+                setLoadMore(true);
+            }
+        };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isLoading]); // `isLoading` is a dependency here
