@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import ExpandableText from './ExpandableText'; 
 
 
-const RedditBox = ({ title, selftext, url, thumbnail, author, numComments, permalink, subreddit, id, created_utc, isNSFW, isSpoiler, isStickied, crosspostParent, fullImageUrl }) => {
+const RedditBox = ({ title, selftext, isVideo, url, thumbnail, author, numComments, permalink, subreddit, id, created_utc, isNSFW, isSpoiler, isStickied, crosspostParent, fullImageUrl }) => {
     const redditBaseUrl = 'https://www.reddit.com';
     const [comments, setComments] = useState([]);
     const [showComments, setShowComments] = useState(false);
@@ -71,9 +71,14 @@ const RedditBox = ({ title, selftext, url, thumbnail, author, numComments, perma
                 {isSpoiler && <span style={{ color: 'orange' }}>Spoiler </span>}
                 {isStickied && <span style={{ color: 'green' }}>Stickied </span>}
             </div>
-            {thumbnail && thumbnail !== 'self' && <img
+            {thumbnail && thumbnail !== 'self' && !isVideo && <img
                 src={thumbnail}
                 alt={title}
+                style={{ maxWidth: '100%', cursor: 'pointer' }}
+                onClick={toggleImageModal}
+            />}
+            {thumbnail && thumbnail !== 'self' && isVideo && <video
+                source={thumbnail}
                 style={{ maxWidth: '100%', cursor: 'pointer' }}
                 onClick={toggleImageModal}
             />}

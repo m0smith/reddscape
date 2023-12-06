@@ -99,6 +99,8 @@ const SubredditComponent = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isLoading]); // `isLoading` is a dependency here
 
+
+
     return (
         <div className="App">
             <input
@@ -122,15 +124,25 @@ const SubredditComponent = () => {
                 />
             </label>
             <RedditLayout>
-                {posts.map(post => (
-                    <RedditBox
+                {posts.map(post => {
+
+                    
+                    console.log(post.thumbnail, post.is_video)
+                        let thumbnail = post.thumbnail.startsWith('http') ? post.thumbnail : null
+                        if (post.url_overridden_by_dest) {
+                            thumbnail = post.url_overridden_by_dest
+                        }
+                        if( post.is_video) {
+                            thumbnail = post.media.reddit_video.scrubber_media_url
+                        }
+                    return <RedditBox
                         key={post.id}
                         id={post.id}
                         title={post.title}
                         author={post.author}
                         url={post.url}
                         selftext={post.selftext}
-                        thumbnail={post.thumbnail.startsWith('http') ? post.thumbnail : null}
+                        thumbnail={thumbnail}
                         fullImageUrl={post.url}
                         numComments={post.num_comments}
                         permalink={post.permalink}
@@ -139,9 +151,10 @@ const SubredditComponent = () => {
                         created_utc={post.created_utc}
                         isSpoiler={post.spoiler}
                         isStickied={post.stickied}
+                        isVideo={post.is_video}
                         crosspostParent={post.crosspost_parent_list ? post.crosspost_parent_list[0] : null}
                     />
-                ))}
+                    })}
             </RedditLayout>
             {isLoading && <div>Loading more posts...</div>}
         </div>
