@@ -3,6 +3,7 @@ import axios from 'axios';
 import Comment from './Comment';
 import ImageModal from './ImageModal';
 import { Link } from 'react-router-dom';
+import ExpandableText from './ExpandableText'; 
 
 
 const RedditBox = ({ title, selftext, url, thumbnail, author, numComments, permalink, subreddit, id, created_utc, isNSFW, isSpoiler, isStickied, crosspostParent, fullImageUrl }) => {
@@ -80,7 +81,7 @@ const RedditBox = ({ title, selftext, url, thumbnail, author, numComments, perma
                 <ImageModal src={fullImageUrl || thumbnail} alt={title} onClose={() => setImageModalOpen(false)} />
             )}
             <div>
-                {selftext && (<p>{selftext}</p>)}
+                <ExpandableText text={selftext} />
             </div>
             <div>
                 <a href={url} target="_blank" rel="noopener noreferrer">Read more</a>
