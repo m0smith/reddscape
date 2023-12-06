@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import SubredditComponent from './SubredditComponent'; // Import your subreddit component
 import UserPostsComponent from './UserPostsComponent';
-
+ 
 const App = () => {
     return (
         <Router>
