@@ -1,25 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import SubredditComponent from './SubredditComponent'; // Import your subreddit component
+import UserPostsComponent from './UserPostsComponent';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Navigate replace to="/r/popular" />} />
+
+                <Route path="/r/:subreddit" element={<SubredditComponent />} />
+                <Route path="/user/:username" element={<UserPostsComponent />} />
+                {/* Add other routes as needed */}
+            </Routes>
+        </Router>
+    );
+};
 
 export default App;
