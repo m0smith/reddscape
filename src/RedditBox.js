@@ -5,7 +5,7 @@ import ImageModal from './ImageModal';
 import { Link } from 'react-router-dom';
 
 
-const RedditBox = ({ title, url, thumbnail, author, numComments, permalink, subreddit, id, created_utc, isNSFW, isSpoiler, isStickied, crosspostParent, fullImageUrl }) => {
+const RedditBox = ({ title, selftext, url, thumbnail, author, numComments, permalink, subreddit, id, created_utc, isNSFW, isSpoiler, isStickied, crosspostParent, fullImageUrl }) => {
     const redditBaseUrl = 'https://www.reddit.com';
     const [comments, setComments] = useState([]);
     const [showComments, setShowComments] = useState(false);
@@ -27,7 +27,7 @@ const RedditBox = ({ title, url, thumbnail, author, numComments, permalink, subr
         const date = new Date(unixTimestamp * 1000); // Convert to milliseconds
         return date.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     };
-    
+
     const toggleImageModal = () => {
         setImageModalOpen(!isImageModalOpen);
     };
@@ -45,7 +45,7 @@ const RedditBox = ({ title, url, thumbnail, author, numComments, permalink, subr
         <div style={boxStyle}>
 
             <div>
-            <Link to={`/r/${subreddit}`}>/r/{subreddit}</Link>
+                <Link to={`/r/${subreddit}`}>/r/{subreddit}</Link>
                 {' | '}
                 <Link to={`/user/${author}`}> u/{author} </Link>
 
@@ -79,6 +79,9 @@ const RedditBox = ({ title, url, thumbnail, author, numComments, permalink, subr
             {isImageModalOpen && (
                 <ImageModal src={fullImageUrl || thumbnail} alt={title} onClose={() => setImageModalOpen(false)} />
             )}
+            <div>
+                {selftext && (<p>{selftext}</p>)}
+            </div>
             <div>
                 <a href={url} target="_blank" rel="noopener noreferrer">Read more</a>
             </div>

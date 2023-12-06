@@ -129,6 +129,7 @@ const SubredditComponent = () => {
                         title={post.title}
                         author={post.author}
                         url={post.url}
+                        selftext={post.selftext}
                         thumbnail={post.thumbnail.startsWith('http') ? post.thumbnail : null}
                         fullImageUrl={post.url}
                         numComments={post.num_comments}
