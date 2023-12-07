@@ -29,7 +29,7 @@ const RedditBox = ({ title, selftext, isVideo, url, thumbnail, author, numCommen
         return date.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     };
 
-    const toggleImageModal = () => {
+    const toggleImageModal = () => { 
         setImageModalOpen(!isImageModalOpen);
     };
     // Responsive style for the RedditBox

@@ -15,10 +15,21 @@ const SubredditComponent = () => {
     const [loadMore, setLoadMore] = useState(true);
     const [debouncedSubreddit, setDebouncedSubreddit] = useState(subreddit);
 
+    if (subreddit !== debouncedSubreddit) {
+        setLoadMore(false)
+        setDebouncedSubreddit(subreddit)
+        setPosts([]);  // Reset posts
+        setAfter(null); // Reset pagination token
+       
+        setIsLoading(false)
+        setLoadMore(true)
+    }
+
+    // console.log(subreddit + ' ' + debouncedSubreddit)
 
     const debounce = (func, delay) => {
         let inDebounce;
-        return function() {
+        return function () {
             const context = this;
             const args = arguments;
             clearTimeout(inDebounce);
@@ -29,8 +40,9 @@ const SubredditComponent = () => {
     const handleSubredditChange = debounce((newSubreddit) => {
         setDebouncedSubreddit(newSubreddit);
     }, 500); // 500ms delay
-    
+
     useEffect(() => {
+        console.log("useEffect:" + loadMore + " " + isLoading)
         if (loadMore && !isLoading) {
             setIsLoading(true);
             console.log(subreddit)
@@ -51,20 +63,20 @@ const SubredditComponent = () => {
                 });
         }
     },
-    // eslint-disable-next-line 
-    [debouncedSubreddit, category, includeNSFW, after, loadMore]); // Add includeNSFW as a dependency
+        // eslint-disable-next-line 
+        [debouncedSubreddit, category, includeNSFW, after, loadMore]); // Add includeNSFW as a dependency
 
-    
+
 
     const newSubreddit = (s) => {
         console.log("newSubreddit")
         // setSubreddit(_ => s)
         handleSubredditChange(s);
-        setIsLoading(false); 
+        setIsLoading(false);
         setLoadMore(true);
         setPosts([]);  // Reset posts
         setAfter(null); // Reset pagination token
-        
+
     };
 
     const handleNsfw = () => {
@@ -72,13 +84,16 @@ const SubredditComponent = () => {
         setIncludeNSFW((f) => !f)
         setIsLoading(false)
         setLoadMore(true);
+        setAfter(null); // Reset pagination token
+
     }
 
     const handleCategory = (v) => {
         setPosts([])
+        setCategory(v)
         setIsLoading(false)
         setLoadMore(true);
-        setCategory(v)
+
     }
 
     useEffect(() => {
@@ -89,7 +104,7 @@ const SubredditComponent = () => {
             // console.log("handleScroll:scrollPosition:" + scrollPosition)
             // console.log("handleScroll:threshold:" + threshold)
             // console.log("handleScroll:isLoading:" + isLoading)
-    
+
             if (scrollPosition >= threshold && !isLoading) {
                 // console.log("handleScroll:loadMore:" + loadMore)
                 setLoadMore(true);
@@ -126,15 +141,18 @@ const SubredditComponent = () => {
             <RedditLayout>
                 {posts.map(post => {
 
-                    
-                    console.log(post.thumbnail, post.is_video)
-                        let thumbnail = post.thumbnail.startsWith('http') ? post.thumbnail : null
-                        if (post.url_overridden_by_dest) {
-                            thumbnail = post.url_overridden_by_dest
-                        }
-                        if( post.is_video) {
-                            thumbnail = post.media.reddit_video.scrubber_media_url
-                        }
+
+                    //console.log(post.thumbnail, post.is_video)
+                    let thumbnail = post.thumbnail.startsWith('http') ?  post.thumbnail : null
+                    if (post.url_overridden_by_dest) {
+                        thumbnail =  post.url_overridden_by_dest
+                    }
+                    if (post.preview) {
+                        thumbnail = decodeURI(post.preview.images[0].resolutions[0].url)
+                    }
+                    if (post.is_video) {
+                        thumbnail =  post.media.reddit_video.scrubber_media_url
+                    }
                     return <RedditBox
                         key={post.id}
                         id={post.id}
@@ -154,7 +172,7 @@ const SubredditComponent = () => {
                         isVideo={post.is_video}
                         crosspostParent={post.crosspost_parent_list ? post.crosspost_parent_list[0] : null}
                     />
-                    })}
+                })}
             </RedditLayout>
             {isLoading && <div>Loading more posts...</div>}
         </div>
