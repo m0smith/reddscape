@@ -46,6 +46,11 @@ const RedditBox = ({ title, selftext, isVideo, url, thumbnail, author, numCommen
         <div style={boxStyle}>
 
             <div>
+            
+                {isNSFW && <span style={{ color: 'red' }}>NSFW </span>}
+                {isSpoiler && <span style={{ color: 'orange' }}>Spoiler </span>}
+                {isStickied && <span style={{ color: 'green' }}>Stickied </span>}
+            
                 <Link to={`/r/${subreddit}`}>/r/{subreddit}</Link>
                 {' | '}
                 <Link to={`/user/${author}`}> u/{author} </Link>
@@ -66,12 +71,8 @@ const RedditBox = ({ title, selftext, isVideo, url, thumbnail, author, numCommen
 
             <h4>{title}</h4>
             <div>Posted on: {formatDate(created_utc)}</div>
-            <div style={{ marginBottom: '10px' }}>
-                {isNSFW && <span style={{ color: 'red' }}>NSFW </span>}
-                {isSpoiler && <span style={{ color: 'orange' }}>Spoiler </span>}
-                {isStickied && <span style={{ color: 'green' }}>Stickied </span>}
-            </div>
-            {thumbnail && thumbnail !== 'self' && !isVideo && <img
+           
+            {thumbnail && thumbnail !== 'self' && <img
                 src={thumbnail}
                 alt={title}
                 style={{ maxWidth: '100%', cursor: 'pointer' }}
