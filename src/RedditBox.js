@@ -82,7 +82,7 @@ const RedditBox = ({ title, selftext, domain, isVideo, url, thumbnail, author, n
                 <ImageModal src={fullImageUrl || thumbnail} alt={title} onClose={() => setImageModalOpen(false)} />
             )}
             <div>
-                <ExpandableText text={selftext} />
+                <ExpandableText text={selftext} isSpoiler={isSpoiler}/>
             </div>
             <div>
                 <a href={url} target="_blank" rel="noopener noreferrer">{domain}</a>
@@ -92,7 +92,7 @@ const RedditBox = ({ title, selftext, domain, isVideo, url, thumbnail, author, n
                 <a href={`${redditBaseUrl}${permalink}`} target="_blank" rel="noopener noreferrer">See on Redit</a>
 
             </div>
-            {numComments > 1 && (
+            {numComments > 0 && (
                 <div>
                     <button onClick={loadComments}>{showComments ? 'Hide' : 'Show'} Comments</button>
                     {showComments && comments.map(comment => (

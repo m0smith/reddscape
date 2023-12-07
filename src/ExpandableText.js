@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
-const ExpandableText = ({ text }) => {
+const ExpandableText = ({ text, isSpoiler }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleExpanded = () => {
         setIsExpanded(!isExpanded);
     };
 
-    const snipett_length = 50
+    const snipett_length = isSpoiler ? 1: 50
 
     return (
         <div>
