@@ -159,6 +159,7 @@ const SubredditComponent = () => {
                         title={post.title}
                         author={post.author}
                         url={post.url}
+                        domain={post.domain}
                         selftext={post.selftext}
                         thumbnail={thumbnail}
                         fullImageUrl={post.url}

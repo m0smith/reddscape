@@ -3,10 +3,10 @@ import axios from 'axios';
 import Comment from './Comment';
 import ImageModal from './ImageModal';
 import { Link } from 'react-router-dom';
-import ExpandableText from './ExpandableText'; 
+import ExpandableText from './ExpandableText';
 
 
-const RedditBox = ({ title, selftext, isVideo, url, thumbnail, author, numComments, permalink, subreddit, id, created_utc, isNSFW, isSpoiler, isStickied, crosspostParent, fullImageUrl }) => {
+const RedditBox = ({ title, selftext, domain, isVideo, url, thumbnail, author, numComments, permalink, subreddit, id, created_utc, isNSFW, isSpoiler, isStickied, crosspostParent, fullImageUrl }) => {
     const redditBaseUrl = 'https://www.reddit.com';
     const [comments, setComments] = useState([]);
     const [showComments, setShowComments] = useState(false);
@@ -29,7 +29,7 @@ const RedditBox = ({ title, selftext, isVideo, url, thumbnail, author, numCommen
         return date.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     };
 
-    const toggleImageModal = () => { 
+    const toggleImageModal = () => {
         setImageModalOpen(!isImageModalOpen);
     };
     // Responsive style for the RedditBox
@@ -45,33 +45,28 @@ const RedditBox = ({ title, selftext, isVideo, url, thumbnail, author, numCommen
     return (
         <div style={boxStyle}>
 
-            <div style={{fontSize: "smaller", margin:'0px'}}>
-            
+            <div style={{ fontSize: "smaller", margin: '0px' }}>
+
                 {isNSFW && <span style={{ color: 'red' }}>NSFW </span>}
                 {isSpoiler && <span style={{ color: 'orange' }}>Spoiler </span>}
                 {isStickied && <span style={{ color: 'green' }}>Sticky </span>}
-            
+
                 <Link to={`/r/${subreddit}`}>/r/{subreddit}</Link>
                 {' | '}
                 <Link to={`/user/${author}`}> u/{author} </Link>
-                <p style={{ margin:'0px 0px 0px 1em', fontStyle: 'italic'}}>{formatDate(created_utc)}</p>
+                <p style={{ margin: '0px 0px 0px 1em', fontStyle: 'italic' }}>{formatDate(created_utc)}</p>
 
             </div>
             {crosspostParent && (
-                <div style={{ marginTop: '10px' }}>
-                    <strong>Crossposted from:</strong>
-                    <a href={`https://www.reddit.com/r/${crosspostParent.subreddit}`} target="_blank" rel="noopener noreferrer">
-                        /r/{crosspostParent.subreddit}
-                    </a>
+                <div style={{  fontSize: "smaller", margin: '0px 0px 0px 1em'  }}>
+                    <strong>Crosspost</strong> <Link to={`/r/${crosspostParent.subreddit}`}>/r/{crosspostParent.subreddit}</Link>
                     {' by '}
-                    <a href={`https://www.reddit.com/user/${crosspostParent.author}`} target="_blank" rel="noopener noreferrer">
-                        u/{crosspostParent.author}
-                    </a>
+                    <Link to={`/user/${crosspostParent.author}`}> u/{crosspostParent.author}</Link>
                 </div>
             )}
 
-            <h4 style={{margin:'2px'}}>{decodeURI(title)}</h4>
-           
+            <h4 style={{ margin: '2px' }}>{decodeURI(title)}</h4>
+
             {thumbnail && thumbnail !== 'self' && <img
                 src={thumbnail}
                 alt={title}
@@ -90,20 +85,21 @@ const RedditBox = ({ title, selftext, isVideo, url, thumbnail, author, numCommen
                 <ExpandableText text={selftext} />
             </div>
             <div>
-                <a href={url} target="_blank" rel="noopener noreferrer">Read more</a>
+                <a href={url} target="_blank" rel="noopener noreferrer">{domain}</a>
             </div>
             <div>
                 {numComments} comments -
                 <a href={`${redditBaseUrl}${permalink}`} target="_blank" rel="noopener noreferrer">See on Redit</a>
 
             </div>
-            <div>
-                <button onClick={loadComments}>{showComments ? 'Hide' : 'Show'} Comments</button>
-                {showComments && comments.map(comment => (
-                    <Comment nesting={nesting} key={comment.id} body={comment.body} created_utc={comment.created_utc} replies={comment.replies ? comment.replies : []} />
-                ))}
+            {numComments > 1 && (
+                <div>
+                    <button onClick={loadComments}>{showComments ? 'Hide' : 'Show'} Comments</button>
+                    {showComments && comments.map(comment => (
+                        <Comment nesting={nesting} key={comment.id} body={comment.body} created_utc={comment.created_utc} replies={comment.replies ? comment.replies : []} />
+                    ))}
 
-            </div>
+                </div>)}
         </div>
     );
 };
