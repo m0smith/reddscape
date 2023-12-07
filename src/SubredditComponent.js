@@ -144,13 +144,13 @@ const SubredditComponent = () => {
 
                     //console.log(post.thumbnail, post.is_video)
                     let thumbnail = post.thumbnail.startsWith('http') ?  post.thumbnail : null
-                    if (post.url_overridden_by_dest) {
+                    if (!thumbnail && post.url_overridden_by_dest) {
                         thumbnail =  post.url_overridden_by_dest
                     }
-                    if (post.preview) {
+                    if (!thumbnail && post.preview) {
                         thumbnail = decodeURI(post.preview.images[0].resolutions[0].url)
                     }
-                    if (post.is_video) {
+                    if (!thumbnail && post.is_video) {
                         thumbnail =  post.media.reddit_video.scrubber_media_url
                     }
                     return <RedditBox

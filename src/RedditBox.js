@@ -45,15 +45,16 @@ const RedditBox = ({ title, selftext, isVideo, url, thumbnail, author, numCommen
     return (
         <div style={boxStyle}>
 
-            <div>
+            <div style={{fontSize: "smaller", margin:'0px'}}>
             
                 {isNSFW && <span style={{ color: 'red' }}>NSFW </span>}
                 {isSpoiler && <span style={{ color: 'orange' }}>Spoiler </span>}
-                {isStickied && <span style={{ color: 'green' }}>Stickied </span>}
+                {isStickied && <span style={{ color: 'green' }}>Sticky </span>}
             
                 <Link to={`/r/${subreddit}`}>/r/{subreddit}</Link>
                 {' | '}
                 <Link to={`/user/${author}`}> u/{author} </Link>
+                <p style={{ margin:'0px 0px 0px 1em', fontStyle: 'italic'}}>{formatDate(created_utc)}</p>
 
             </div>
             {crosspostParent && (
@@ -69,8 +70,7 @@ const RedditBox = ({ title, selftext, isVideo, url, thumbnail, author, numCommen
                 </div>
             )}
 
-            <h4>{title}</h4>
-            <div>Posted on: {formatDate(created_utc)}</div>
+            <h4 style={{margin:'2px'}}>{decodeURI(title)}</h4>
            
             {thumbnail && thumbnail !== 'self' && <img
                 src={thumbnail}
