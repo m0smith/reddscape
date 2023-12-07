@@ -66,15 +66,15 @@ const RedditBox = ({ title, selftext, domain, isVideo, url, thumbnail, author, n
             )}
 
             <h4 style={{ margin: '2px' }}>{decodeURI(title)}</h4>
-
-            {thumbnail && thumbnail !== 'self' && <img
+            
+            {thumbnail && thumbnail !== 'self' && !isVideo && <img
                 src={thumbnail}
                 alt={title}
                 style={{ maxWidth: '100%', cursor: 'pointer' }}
                 onClick={toggleImageModal}
             />}
             {thumbnail && thumbnail !== 'self' && isVideo && <video
-                source={thumbnail}
+                src={thumbnail}
                 style={{ maxWidth: '100%', cursor: 'pointer' }}
                 onClick={toggleImageModal}
             />}
