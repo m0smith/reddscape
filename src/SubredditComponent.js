@@ -46,7 +46,7 @@ const SubredditComponent = () => {
         if (loadMore && !isLoading) {
             setIsLoading(true);
             console.log(subreddit)
-            axios.get(`https://www.reddit.com/r/${subreddit}/${category}.json?after=${after}`)
+            axios.get(`https://www.reddit.com/r/${subreddit}/${category}.json?after=${after}&show=all`)
                 .then(response => {
                     const newPosts = response.data.data.children
                         .map(obj => obj.data)
@@ -70,26 +70,33 @@ const SubredditComponent = () => {
 
     const newSubreddit = (s) => {
         console.log("newSubreddit")
+        setLoadMore(false);
+        setPosts([]);
+        setAfter(null);
         // setSubreddit(_ => s)
         handleSubredditChange(s);
         setIsLoading(false);
         setLoadMore(true);
-        setPosts([]);  // Reset posts
-        setAfter(null); // Reset pagination token
+         // Reset posts
+        // Reset pagination token
 
     };
 
     const handleNsfw = () => {
+        setLoadMore(false);
+        setAfter(null);
         setPosts([])
         setIncludeNSFW((f) => !f)
         setIsLoading(false)
         setLoadMore(true);
-        setAfter(null); // Reset pagination token
+
 
     }
 
     const handleCategory = (v) => {
+        setLoadMore(false);
         setPosts([])
+        setAfter(null);
         setCategory(v)
         setIsLoading(false)
         setLoadMore(true);
@@ -127,6 +134,7 @@ const SubredditComponent = () => {
             <select value={category} onChange={(e) => handleCategory(e.target.value)}>
                 <option value="hot">Hot</option>
                 <option value="new">New</option>
+                <option value="rising">Rising</option>
                 <option value="top">Top</option>
                 <option value="controversial">Controversial</option>
             </select>
