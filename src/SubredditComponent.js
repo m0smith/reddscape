@@ -8,7 +8,7 @@ const SubredditComponent = () => {
    
     const { subreddit } = useParams();
     return ( 
-        <RedditApp type="r" name={subreddit} passed_category="hot"/>
+        <RedditApp type="r" name={subreddit} default_category="hot"/>
     )
 }
 

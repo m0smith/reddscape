@@ -6,7 +6,7 @@ import RedditApp from './RedditApp'; // Assuming this is your component to displ
 const UserPostsComponent = () => {
     const { username } = useParams();
     return (
-        <RedditApp type="user" name={username} passed_category="submitted" />
+        <RedditApp type="user" name={username} default_category="submitted" />
     )
 }
 
