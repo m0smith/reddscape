@@ -42,6 +42,14 @@ const RedditBox = ({ title, selftext, domain, isVideo, url, thumbnail, author, n
         overflow: 'hidden'
     };
 
+    function decode(str) {
+
+        let txt = new DOMParser().parseFromString(str, "text/html");
+
+        return txt.documentElement.textContent;
+
+    }
+
     return (
         <div style={boxStyle}>
 
@@ -58,15 +66,15 @@ const RedditBox = ({ title, selftext, domain, isVideo, url, thumbnail, author, n
 
             </div>
             {crosspostParent && (
-                <div style={{  fontSize: "smaller", margin: '0px 0px 0px 1em'  }}>
+                <div style={{ fontSize: "smaller", margin: '0px 0px 0px 1em' }}>
                     <strong>Crosspost</strong> <Link to={`/r/${crosspostParent.subreddit}`}>/r/{crosspostParent.subreddit}</Link>
                     {' by '}
                     <Link to={`/user/${crosspostParent.author}`}> u/{crosspostParent.author}</Link>
                 </div>
             )}
 
-            <h4 style={{ margin: '2px' }}>{decodeURI(title)}</h4>
-            
+            <h4 style={{ margin: '2px' }}>{decode(title)}</h4>
+
             {thumbnail && thumbnail !== 'self' && !isVideo && <img
                 src={thumbnail}
                 alt={title}
@@ -82,7 +90,7 @@ const RedditBox = ({ title, selftext, domain, isVideo, url, thumbnail, author, n
                 <ImageModal src={fullImageUrl || thumbnail} alt={title} onClose={() => setImageModalOpen(false)} />
             )}
             <div>
-                <ExpandableText text={selftext} isSpoiler={isSpoiler}/>
+                <ExpandableText text={selftext} isSpoiler={isSpoiler} />
             </div>
             <div>
                 <a href={url} target="_blank" rel="noopener noreferrer">{domain}</a>
