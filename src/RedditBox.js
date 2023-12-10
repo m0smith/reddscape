@@ -4,6 +4,7 @@ import Comment from './Comment';
 import ImageModal from './ImageModal';
 import { Link } from 'react-router-dom';
 import ExpandableText from './ExpandableText';
+import CardModal from './CardModal';
 
 
 const RedditBox = ({ title, selftext, domain, isVideo, url, thumbnail, author, numComments, permalink, subreddit, id, created_utc, isNSFW, isSpoiler, isStickied, crosspostParent, fullImageUrl }) => {
@@ -87,7 +88,7 @@ const RedditBox = ({ title, selftext, domain, isVideo, url, thumbnail, author, n
                 onClick={toggleImageModal}
             />}
             {isImageModalOpen && (
-                <ImageModal src={fullImageUrl || thumbnail} isVideo={isVideo} alt={title} onClose={() => setImageModalOpen(false)} />
+                <CardModal src={fullImageUrl || thumbnail} isVideo={isVideo} alt={title} onClose={() => setImageModalOpen(false)} />
             )}
             <div>
                 <ExpandableText text={selftext} isSpoiler={isSpoiler} />

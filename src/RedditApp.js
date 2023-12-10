@@ -148,8 +148,11 @@ const RedditApp = ({ type, name, default_category }) => {
     }
 
     const default_gallery = (post) => {
-        const gallery_id = post.gallery_data.items[0].media_id
-        return [post.thumbnail, decode(post.media_metadata[gallery_id].s.u)]
+        const gallery_id = post.gallery_data ? post.gallery_data.items[0].media_id : null
+        if(! gallery_id) {
+            console.log(post)
+        }
+        return [post.thumbnail, gallery_id ? decode(post.media_metadata[gallery_id].s.u) : null]
     }
 
     return (
