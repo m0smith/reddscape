@@ -137,7 +137,7 @@ const RedditApp = ({ type, name, default_category }) => {
     }
 
     const gif_image = (post) => {
-        return [ post.thumbnail,  
+        return [ decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url),  
             post.url]
         
     }
@@ -190,7 +190,9 @@ const RedditApp = ({ type, name, default_category }) => {
                     let fullImageUrl = null 
                     if(isVideo) {
                         [thumbnail, fullImageUrl ] = default_video(post)
-                    } else if (post.preview) {
+                    } else if (post.is_reddit_media_domain){
+                        [thumbnail, fullImageUrl ] = gif_image(post)
+                    }   else if (post.preview) {
                         [thumbnail, fullImageUrl ] = default_image(post)
                     } else if (post.is_gallery) {
                         [thumbnail, fullImageUrl ] = default_gallery(post)
