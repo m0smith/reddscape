@@ -81,13 +81,13 @@ const RedditBox = ({ title, selftext, domain, isVideo, url, thumbnail, author, n
                 style={{ maxWidth: '100%', cursor: 'pointer' }}
                 onClick={toggleImageModal}
             />}
-            {thumbnail && thumbnail !== 'self' && isVideo && <video
+            {thumbnail && thumbnail !== 'self' && isVideo && <img
                 src={thumbnail}
                 style={{ maxWidth: '100%', cursor: 'pointer' }}
                 onClick={toggleImageModal}
             />}
             {isImageModalOpen && (
-                <ImageModal src={fullImageUrl || thumbnail} alt={title} onClose={() => setImageModalOpen(false)} />
+                <ImageModal src={fullImageUrl || thumbnail} isVideo={isVideo} alt={title} onClose={() => setImageModalOpen(false)} />
             )}
             <div>
                 <ExpandableText text={selftext} isSpoiler={isSpoiler} />

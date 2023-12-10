@@ -37,6 +37,14 @@ const RedditApp = ({ type, name, default_category }) => {
         };
     };
 
+    function decode(str) {
+
+        let txt = new DOMParser().parseFromString(str, "text/html");
+
+        return txt.documentElement.textContent;
+
+    }
+
     const handleSubredditChange = debounce((newSubreddit) => {
         setDebouncedSubreddit(newSubreddit);
     }, 500); // 500ms delay
@@ -121,7 +129,28 @@ const RedditApp = ({ type, name, default_category }) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isLoading]); // `isLoading` is a dependency here
 
+    const default_video = (post) => {
+        const full = post.media ? post.media.reddit_video.fallback_url : post.preview.reddit_video_preview.fallback_url
+        return [ decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url),  
+            full]
+        
+    }
 
+    const gif_image = (post) => {
+        return [ post.thumbnail,  
+            post.url]
+        
+    }
+
+    const default_image = (post) => {
+        return [decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url),
+            decode(post.preview.images.slice(-1)[0].source.url)]
+    }
+
+    const default_gallery = (post) => {
+        const gallery_id = post.gallery_data.items[0].media_id
+        return [post.thumbnail, decode(post.media_metadata[gallery_id].s.u)]
+    }
 
     return (
         <div className="App">
@@ -152,19 +181,27 @@ const RedditApp = ({ type, name, default_category }) => {
             <RedditLayout>
                 {posts.map(post => {
 
-
+                    const isVideo = post.is_video || post.preview?.reddit_video_preview
                     //console.log(post.thumbnail, post.is_video)
                     let thumbnail = post.thumbnail.startsWith('http') ? post.thumbnail : null
+                    let fullImageUrl = null 
+                    if(isVideo) {
+                        [thumbnail, fullImageUrl ] = default_video(post)
+                    } else if (post.preview) {
+                        [thumbnail, fullImageUrl ] = default_image(post)
+                    } else if (post.is_gallery) {
+                        [thumbnail, fullImageUrl ] = default_gallery(post)
+                    }
+                    
+                    // let thumbnail = post.thumbnail.startsWith('http') ? post.thumbnail : null
 
-                    if (!thumbnail && post.preview) {
-                        thumbnail = decodeURI(post.preview.images[0].resolutions[0].url)
-                    }
-                    if (!thumbnail && post.url_overridden_by_dest) {
-                        thumbnail = post.url_overridden_by_dest
-                    }
-                    if (post.is_video) {
-                        thumbnail = decodeURI(post.media.reddit_video.scrubber_media_url)
-                    }
+                    // if (!thumbnail && post.preview) {
+                    //     thumbnail = decodeURI(post.preview.images[0].resolutions[0].url)
+                    // }
+                    // if (!thumbnail && post.url_overridden_by_dest) {
+                    //     thumbnail = post.url_overridden_by_dest
+                    // }
+
                     return <RedditBox
                         key={post.id}
                         id={post.id}
@@ -174,7 +211,7 @@ const RedditApp = ({ type, name, default_category }) => {
                         domain={post.domain}
                         selftext={post.selftext}
                         thumbnail={thumbnail}
-                        fullImageUrl={post.url}
+                        fullImageUrl={fullImageUrl}
                         numComments={post.num_comments}
                         permalink={post.permalink}
                         subreddit={post.subreddit}
@@ -182,7 +219,7 @@ const RedditApp = ({ type, name, default_category }) => {
                         created_utc={post.created_utc}
                         isSpoiler={post.spoiler}
                         isStickied={post.stickied}
-                        isVideo={post.is_video}
+                        isVideo={isVideo }
                         crosspostParent={post.crosspost_parent_list ? post.crosspost_parent_list[0] : null}
                     />
                 })}

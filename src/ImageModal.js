@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ImageModal = ({ src, alt, onClose }) => {
+const ImageModal = ({ src, alt, onClose , isVideo }) => {
     if (!src) return null;
 
     return (
@@ -16,7 +16,9 @@ const ImageModal = ({ src, alt, onClose }) => {
             justifyContent: 'center', 
             zIndex: 1000
         }} onClick={onClose}>
-            <img src={src} alt={alt} style={{ maxHeight: '90%', maxWidth: '90%' }} />
+            {isVideo ? (<video autoplay="true" src={src} style={{ maxHeight: '90%', maxWidth: '90%' }}></video> ) : 
+           ( <img src={src} alt={alt} style={{ maxHeight: '90%', maxWidth: '90%' }} />)
+    }
         </div>
     );
 };
