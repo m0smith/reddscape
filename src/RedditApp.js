@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import RedditBox from './RedditBox';
 import RedditLayout from './RedditLayout';
+import RedditCard from './RedditCard';
 
 const RedditApp = ({ type, name, default_category }) => {
 
@@ -211,7 +212,7 @@ const RedditApp = ({ type, name, default_category }) => {
                     //     thumbnail = post.url_overridden_by_dest
                     // }
 
-                    return <RedditBox
+                    return <RedditCard
                         key={post.id}
                         id={post.id}
                         title={post.title}
