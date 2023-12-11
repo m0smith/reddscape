@@ -137,7 +137,8 @@ const RedditApp = ({ type, name, default_category }) => {
     }
 
     const gif_image = (post) => {
-        return [ decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url),  
+        const thumbnail = post.preview?.images ? decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url) : post.url
+        return [ thumbnail,  
             post.url]
         
     }
