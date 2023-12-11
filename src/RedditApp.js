@@ -131,26 +131,26 @@ const RedditApp = ({ type, name, default_category }) => {
 
     const default_video = (post) => {
         const full = post.media ? post.media.reddit_video.fallback_url : post.preview.reddit_video_preview.fallback_url
-        return [ decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url),  
+        return [post.preview ? decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url) : full,
             full]
-        
+
     }
 
     const gif_image = (post) => {
         const thumbnail = post.preview?.images ? decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url) : post.url
-        return [ thumbnail,  
+        return [thumbnail,
             post.url]
-        
+
     }
 
     const default_image = (post) => {
         return [decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url),
-            decode(post.preview.images.slice(-1)[0].source.url)]
+        decode(post.preview.images.slice(-1)[0].source.url)]
     }
 
     const default_gallery = (post) => {
         const gallery_id = post.gallery_data ? post.gallery_data.items[0].media_id : null
-        if(! gallery_id) {
+        if (!gallery_id) {
             console.log(post)
         }
         return [post.thumbnail, gallery_id ? decode(post.media_metadata[gallery_id].s.u) : null]
@@ -188,17 +188,20 @@ const RedditApp = ({ type, name, default_category }) => {
                     const isVideo = post.is_video || post.preview?.reddit_video_preview
                     //console.log(post.thumbnail, post.is_video)
                     let thumbnail = post.thumbnail.startsWith('http') ? post.thumbnail : null
-                    let fullImageUrl = null 
-                    if(isVideo) {
-                        [thumbnail, fullImageUrl ] = default_video(post)
-                    } else if (post.is_reddit_media_domain){
-                        [thumbnail, fullImageUrl ] = gif_image(post)
-                    }   else if (post.preview) {
-                        [thumbnail, fullImageUrl ] = default_image(post)
+                    let fullImageUrl = null
+                    if (post.removed_by_category) {
+                        thumbnail = null
+                        fullImageUrl = null
+                    } else if (isVideo) {
+                        [thumbnail, fullImageUrl] = default_video(post)
+                    } else if (post.is_reddit_media_domain) {
+                        [thumbnail, fullImageUrl] = gif_image(post)
+                    } else if (post.preview) {
+                        [thumbnail, fullImageUrl] = default_image(post)
                     } else if (post.is_gallery) {
-                        [thumbnail, fullImageUrl ] = default_gallery(post)
+                        [thumbnail, fullImageUrl] = default_gallery(post)
                     }
-                    
+
                     // let thumbnail = post.thumbnail.startsWith('http') ? post.thumbnail : null
 
                     // if (!thumbnail && post.preview) {
@@ -225,7 +228,7 @@ const RedditApp = ({ type, name, default_category }) => {
                         created_utc={post.created_utc}
                         isSpoiler={post.spoiler}
                         isStickied={post.stickied}
-                        isVideo={isVideo }
+                        isVideo={isVideo}
                         crosspostParent={post.crosspost_parent_list ? post.crosspost_parent_list[0] : null}
                     />
                 })}
