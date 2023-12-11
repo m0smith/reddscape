@@ -154,7 +154,7 @@ const RedditApp = ({ type, name, default_category }) => {
         if (!gallery_id) {
             console.log(post)
         }
-        return [post.thumbnail, gallery_id ? decode(post.media_metadata[gallery_id].s.u) : null]
+        return [post.thumbnail, gallery_id ? decode(post.media_metadata[gallery_id].s?.u) : null]
     }
 
     return (
@@ -190,6 +190,8 @@ const RedditApp = ({ type, name, default_category }) => {
                     //console.log(post.thumbnail, post.is_video)
                     let thumbnail = post.thumbnail.startsWith('http') ? post.thumbnail : null
                     let fullImageUrl = null
+                    let selftext = post.selftext
+
                     if (post.removed_by_category) {
                         thumbnail = null
                         fullImageUrl = null
@@ -219,7 +221,7 @@ const RedditApp = ({ type, name, default_category }) => {
                         author={post.author}
                         url={post.url}
                         domain={post.domain}
-                        selftext={post.selftext}
+                        selftext={selftext}
                         thumbnail={thumbnail}
                         fullImageUrl={fullImageUrl}
                         numComments={post.num_comments}
