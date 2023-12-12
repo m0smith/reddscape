@@ -131,7 +131,7 @@ const RedditApp = ({ type, name, default_category }) => {
     }, [isLoading]); // `isLoading` is a dependency here
 
     const default_video = (post) => {
-        const full = post.media ? post.media.reddit_video.fallback_url : post.preview.reddit_video_preview.fallback_url
+        const full = post.media ? post.media.reddit_video?.fallback_url : post.preview.reddit_video_preview.fallback_url
         return [post.preview ? decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url) : full,
             full]
 
@@ -145,8 +145,8 @@ const RedditApp = ({ type, name, default_category }) => {
     }
 
     const default_image = (post) => {
-        return [decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url),
-        decode(post.preview.images.slice(-1)[0].source.url)]
+        return [decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0]?.url),
+        decode(post.preview.images.slice(-1)[0].source?.url)]
     }
 
     const default_gallery = (post) => {
@@ -204,6 +204,8 @@ const RedditApp = ({ type, name, default_category }) => {
                     } else if (post.is_gallery) {
                         [thumbnail, fullImageUrl] = default_gallery(post)
                     }
+
+                    selftext += JSON.stringify(post)
 
                     // let thumbnail = post.thumbnail.startsWith('http') ? post.thumbnail : null
 
