@@ -15,15 +15,17 @@ import { Close } from '@mui/icons-material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { Link } from 'react-router-dom';
-import { CardActionArea, Dialog, Box, CardMedia } from '@mui/material';
+import { Box, CardMedia } from '@mui/material';
 import stringify from 'json-stable-stringify'
 import ArbitraryCodeCardContent from './ArbitraryCodeCardContent';
 import CardModal from './CardModal';
+import { decode, formatDate } from './utils';
+import spoiler from './spoiler.png'
 
 
 
 export default function RedditCard({ post }) {
-    const { subreddit, author, selftext, selftext_html, created_utc, is_video, preview, thumbnail, title, removed_by_category, is_gallery } = post
+    const { url, domain, subreddit, author, selftext, selftext_html, created_utc, is_video, preview, thumbnail, title, removed_by_category, is_gallery } = post
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => {
         console.log("open")
@@ -42,20 +44,23 @@ export default function RedditCard({ post }) {
 
     const content = selftext_html ? decode(selftext_html) : selftext
 
-    const formatDate = (unixTimestamp) => {
-        const date = new Date(unixTimestamp * 1000); // Convert to milliseconds
-        return date.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-    };
 
-    const imageContent = ({ thumbnail, thumbnail_height, title, is_self }) => {
+
+    const imageContent = ({ thumbnail, thumbnail_height, title, is_self, preview }) => {
         if (is_self) return null
 
-        return (<CardMedia
+        const preview_images = preview?.images
+        const preview_images_source_url = preview_images && preview_images.length > 0 && preview_images[0].source?.url
+
+        const image = thumbnail === "spoiler" ? spoiler :
+            thumbnail === "default" ? preview_images_source_url : thumbnail
+
+        return thumbnail && (<CardMedia
             onClick={handleOpen}
             component="img"
             // width={thumbnail_width}
             height={thumbnail_height}
-            image={decode(thumbnail)}
+            image={decode(image)}
             alt={title}
             sx={{ objectFit: "contain" }} />)
     }
@@ -108,17 +113,22 @@ export default function RedditCard({ post }) {
         <Box style={boxStyle}>
             <Card>
                 <CardContent>
-                    {post.is_nsfw && <span style={{ color: 'red' }}>NSFW </span>}
-                    {post.is_spoiler && <span style={{ color: 'orange' }}>Spoiler </span>}
-                    {post.is_stickied && <span style={{ color: 'green' }}>Sticky </span>}
-                    {is_gallery && <span style={{ color: 'pink' }}>Gallery </span>}
-                    <Link to={`/r/${subreddit}`}>/r/{subreddit}</Link>
-                    {' | '}
-                    <Link to={`/user/${author}`}> u/{author} </Link>
-                    <p style={{ margin: '0px 0px 0px 1em', fontStyle: 'italic' }}>{formatDate(created_utc)}</p>
+                    <Typography variant="body2">
+                        {post.is_nsfw && <span style={{ color: 'red' }}>NSFW </span>}
+                        {post.is_spoiler && <span style={{ color: 'orange' }}>Spoiler </span>}
+                        {post.is_stickied && <span style={{ color: 'green' }}>Sticky </span>}
+                        {is_gallery && <span style={{ color: 'pink' }}>Gallery </span>}
+                        <Link to={`/r/${subreddit}`}>/r/{subreddit}</Link>
+                        {' | '}
+                        <Link to={`/user/${author}`}> u/{author} </Link>
+                        <p style={{ margin: '0px 0px 0px 1em', fontStyle: 'italic' }}>{formatDate(created_utc)}</p>
+                    </Typography>
+                    <Typography variant='subtitle2'>{title}</Typography>
                 </CardContent>
-                <CardContent><Typography>{title}</Typography></CardContent>
                 {imagepart && imagepart}
+                <CardContent>
+                    <Typography variant="body2"><Link target="_blank" to={url}>{domain}</Link></Typography>
+                </CardContent>
 
                 {content && content.length > 0 && <ArbitraryCodeCardContent code={content} />}
                 <ArbitraryCodeCardContent code={formatted_post} />

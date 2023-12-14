@@ -3,21 +3,16 @@ import Card from '@mui/material/Card';
 import { useState, useEffect } from 'react';
 
 import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import { Button, CardActionArea, CardActions, Dialog, IconButton, CardContent } from '@mui/material';
+import { Dialog, IconButton, CardContent } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
+import { decode } from './utils';
+
 export default function CardModal({ post, open, handleClose }) {
-    function decode(str) {
-
-        let txt = new DOMParser().parseFromString(str, "text/html");
-
-        return txt.documentElement.textContent;
-
-    }
+ 
     const { is_video, thumbnail, title, is_reddit_media_domain, media, domain, url, preview, post_hint } = post
 
-    const urlDomains = new Set(["i.imgur.com"])
+    const urlDomains = new Set(["i.imgur.com", "imgur.com"])
     const preview_images = preview?.images
     const preview_images_source_url = preview_images && preview_images.length > 0 && preview_images[0].source?.url
     const treatAsVideo = is_video || preview?.reddit_video_preview?.fallback_url || urlDomains.has(domain)
@@ -25,7 +20,10 @@ export default function CardModal({ post, open, handleClose }) {
     let image = null
     // console.log(is_reddit_media_domain + ' ' + media?.reddit_video?.fallback_url)
 
-    if (urlDomains.has(domain)) image = url.replace('.gifv', '.mp4')
+    if (urlDomains.has(domain)) {
+        image = url.replace('.gifv', '.mp4')
+        image = /\.\w+$/.test(image) ? image : `${image}.mp4`
+    }
     else if (is_reddit_media_domain && media?.reddit_video?.fallback_url) image = media.reddit_video.fallback_url
     else if (is_reddit_media_domain) image = url
     else if (preview?.reddit_video_preview?.fallback_url) image = preview.reddit_video_preview.fallback_url
@@ -76,6 +74,7 @@ export default function CardModal({ post, open, handleClose }) {
                 src={imageUrl}
                 alt={title}
             />
+
         </Card>
 
     </Dialog >)
