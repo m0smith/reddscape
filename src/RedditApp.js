@@ -4,6 +4,11 @@ import RedditBox from './RedditBox';
 import RedditLayout from './RedditLayout';
 import RedditCard from './RedditCard';
 
+import { Box, Card, CardContent, Link, CardMedia, Typography, Dialog } from '@mui/material'
+import { Close } from '@mui/icons-material';
+
+
+
 const RedditApp = ({ type, name, default_category }) => {
 
     const [posts, setPosts] = useState([]);
@@ -14,6 +19,7 @@ const RedditApp = ({ type, name, default_category }) => {
     const [isLoading, setIsLoading] = useState(false); // To manage loading state
     const [loadMore, setLoadMore] = useState(true);
     const [debouncedSubreddit, setDebouncedSubreddit] = useState(name);
+
 
 
     if (name !== debouncedSubreddit) {
@@ -157,6 +163,12 @@ const RedditApp = ({ type, name, default_category }) => {
         return [post.thumbnail, gallery_id ? decode(post.media_metadata[gallery_id].s?.u) : null]
     }
 
+
+
+   
+
+
+
     return (
         <div className="App">
             {type}
@@ -185,58 +197,8 @@ const RedditApp = ({ type, name, default_category }) => {
             </label>
             <RedditLayout>
                 {posts.map(post => {
-
-                    const isVideo = post.is_video || post.preview?.reddit_video_preview
-                    //console.log(post.thumbnail, post.is_video)
-                    let thumbnail = post.thumbnail.startsWith('http') ? post.thumbnail : null
-                    let fullImageUrl = null
-                    let selftext = post.selftext
-
-                    if (post.removed_by_category) {
-                        thumbnail = null
-                        fullImageUrl = null
-                    } else if (isVideo) {
-                        [thumbnail, fullImageUrl] = default_video(post)
-                    } else if (post.is_reddit_media_domain) {
-                        [thumbnail, fullImageUrl] = gif_image(post)
-                    } else if (post.preview) {
-                        [thumbnail, fullImageUrl] = default_image(post)
-                    } else if (post.is_gallery) {
-                        [thumbnail, fullImageUrl] = default_gallery(post)
-                    }
-
-                    selftext += JSON.stringify(post)
-
-                    // let thumbnail = post.thumbnail.startsWith('http') ? post.thumbnail : null
-
-                    // if (!thumbnail && post.preview) {
-                    //     thumbnail = decodeURI(post.preview.images[0].resolutions[0].url)
-                    // }
-                    // if (!thumbnail && post.url_overridden_by_dest) {
-                    //     thumbnail = post.url_overridden_by_dest
-                    // }
-
-                    return <RedditCard
-                        key={post.id}
-                        id={post.id}
-                        title={post.title}
-                        author={post.author}
-                        url={post.url}
-                        domain={post.domain}
-                        selftext={selftext}
-                        thumbnail={thumbnail}
-                        fullImageUrl={fullImageUrl}
-                        numComments={post.num_comments}
-                        permalink={post.permalink}
-                        subreddit={post.subreddit}
-                        isNSFW={post.over_18}
-                        created_utc={post.created_utc}
-                        isSpoiler={post.spoiler}
-                        isStickied={post.stickied}
-                        isVideo={isVideo}
-                        crosspostParent={post.crosspost_parent_list ? post.crosspost_parent_list[0] : null}
-                    />
-                })}
+                    return (<RedditCard post={post}></RedditCard>)
+                    })}
             </RedditLayout>
             {isLoading && <div>Loading more posts...</div>}
         </div>
