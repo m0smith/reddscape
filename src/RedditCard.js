@@ -25,7 +25,7 @@ import spoiler from './spoiler.png'
 
 
 export default function RedditCard({ post }) {
-    const { url, domain, subreddit, author, selftext, selftext_html, created_utc, is_video, preview, thumbnail, title, removed_by_category, is_gallery } = post
+    const { url, domain, subreddit, author, crosspost_parent_list, selftext, selftext_html, created_utc, is_video, preview, thumbnail, title, removed_by_category, is_gallery } = post
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => {
         console.log("open")
@@ -53,24 +53,20 @@ export default function RedditCard({ post }) {
         const preview_images_source_url = preview_images && preview_images.length > 0 && preview_images[0].source?.url
 
         const image = thumbnail === "spoiler" ? spoiler :
-            thumbnail === "default" ? preview_images_source_url : thumbnail
+                      thumbnail === "nsfw" ? preview_images_source_url :
+                      thumbnail === "image" ? url :
+                      thumbnail === "default" ? preview_images_source_url : thumbnail
 
-        return thumbnail && (<CardMedia
+        return image && (<CardMedia
             onClick={handleOpen}
             component="img"
             // width={thumbnail_width}
             height={thumbnail_height}
             image={decode(image)}
-            alt={title}
+            alt={thumbnail}
             sx={{ objectFit: "contain" }} />)
     }
-    function decode(str) {
 
-        let txt = new DOMParser().parseFromString(str, "text/html");
-
-        return txt.documentElement.textContent;
-
-    }
 
     if (removed_by_category) {
         thumbnailggg = null
@@ -114,15 +110,20 @@ export default function RedditCard({ post }) {
             <Card>
                 <CardContent>
                     <Typography variant="body2">
-                        {post.is_nsfw && <span style={{ color: 'red' }}>NSFW </span>}
-                        {post.is_spoiler && <span style={{ color: 'orange' }}>Spoiler </span>}
-                        {post.is_stickied && <span style={{ color: 'green' }}>Sticky </span>}
+                        {post.over_18 && <span style={{ color: 'red' }}>NSFW </span>}
+                        {post.spoiler && <span style={{ color: 'orange' }}>Spoiler </span>}
+                        {post.stickied && <span style={{ color: 'green' }}>Sticky </span>}
                         {is_gallery && <span style={{ color: 'pink' }}>Gallery </span>}
                         <Link to={`/r/${subreddit}`}>/r/{subreddit}</Link>
                         {' | '}
                         <Link to={`/user/${author}`}> u/{author} </Link>
                         <p style={{ margin: '0px 0px 0px 1em', fontStyle: 'italic' }}>{formatDate(created_utc)}</p>
                     </Typography>
+                    {crosspost_parent_list && (<Typography variant="body2">Crosspost: 
+                    <Link to={`/r/${crosspost_parent_list[0].subreddit}`}>/r/{crosspost_parent_list[0].subreddit}</Link>
+                        {' | '}
+                        <Link to={`/user/${crosspost_parent_list[0].author}`}> u/{crosspost_parent_list[0].author} </Link>
+                    </Typography>)}
                     <Typography variant='subtitle2'>{title}</Typography>
                 </CardContent>
                 {imagepart && imagepart}
