@@ -10,19 +10,23 @@ import { decode } from './utils';
 import ImageGallery from "react-image-gallery"
 
 export default function CardModal({ post, open, handleClose }) {
- 
+
     const { is_video, thumbnail, title, is_reddit_media_domain, media, domain, url, preview, post_hint, is_gallery, gallery_data, media_metadata } = post
 
     const urlDomains = new Set(["i.imgur.com", "imgur.com"])
     const preview_images = preview?.images
     const preview_images_source_url = preview_images && preview_images.length > 0 && preview_images[0].source?.url
     const treatAsVideo = is_video || preview?.reddit_video_preview?.fallback_url || urlDomains.has(domain)
-    let items = is_gallery ? gallery_data.items.map(i => {return {original: decode(media_metadata[i.media_id].s.u),
-                                                                   thumbnail: decode(media_metadata[i.media_id].p[0].u),
-                                                                   originalHeight: 100, // media_metadata[i.media_id].s.y,
-                                                                    originalWidth: 100, // media_metadata[i.media_id].s.x,
-                                                                    thumbnailHeight: media_metadata[i.media_id].p[0].y,
-                                                                    thumbnailWidth: media_metadata[i.media_id].p[0].x}}) : null
+    let items = is_gallery ? gallery_data.items.map(i => {
+        return {
+            original: decode(media_metadata[i.media_id].s?.u),
+            thumbnail: media_metadata[i.media_id]?.p && decode(media_metadata[i.media_id]?.p[0]?.u),
+            originalHeight: media_metadata[i.media_id].s?.y,
+            originalWidth: media_metadata[i.media_id].s?.x,
+            thumbnailHeight: media_metadata[i.media_id]?.p && media_metadata[i.media_id]?.p[0]?.y,
+            thumbnailWidth: media_metadata[i.media_id]?.p && media_metadata[i.media_id]?.p[0]?.x
+        }
+    }) : null
 
     let image = null
     // console.log(is_reddit_media_domain + ' ' + media?.reddit_video?.fallback_url)
@@ -65,7 +69,7 @@ export default function CardModal({ post, open, handleClose }) {
         padding: '10px',
         margin: '10px',
         width: '100%', // Full width on smaller screens
-        maxWidth: '2000px', // Fixed max width on larger screens
+        //maxWidth: '200px', // Fixed max width on larger screens
         overflow: 'hidden'
     };
     console.log("IMGE:" + imageUrl)
@@ -73,19 +77,19 @@ export default function CardModal({ post, open, handleClose }) {
         open={open}
         onClose={handleClose}
         fullWidth
-        maxWidth="100%"
+        //maxWidth="100%"
         style={boxStyle}
-        >
+    >
         <IconButton sx={{ ml: 'auto' }} onClick={handleClose}>
             <Close />
         </IconButton>
         {is_gallery && <ImageGallery useBrowserFullscreen="false" items={items} thumbnailPosition="top" style={{ width: '100%', height: 'auto' }} />}
         {!is_gallery && <Card fullWidth
-        maxWidth="xl">
+            maxWidth="xl">
             <CardContent>{title}</CardContent>
             <CardContent>Image: {primaryImageUrl}</CardContent>
-            
-             <CardMedia
+
+            <CardMedia
                 component={treatAsVideo ? "video" : "img"}
                 autoPlay={treatAsVideo}
                 controls={treatAsVideo}
@@ -98,7 +102,8 @@ export default function CardModal({ post, open, handleClose }) {
 
         </Card>}
 
-    </Dialog >)}
+    </Dialog >)
+}
 
 // if (!src) return null;
 //   return (

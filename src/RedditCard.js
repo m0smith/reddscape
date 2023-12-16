@@ -11,16 +11,18 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 
-import { Close } from '@mui/icons-material';
+import { Close, Visibility } from '@mui/icons-material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { Link } from 'react-router-dom';
-import { Box, CardMedia } from '@mui/material';
+import { Box, CardHeader, CardMedia, Chip , Icon} from '@mui/material';
 import stringify from 'json-stable-stringify'
 import ArbitraryCodeCardContent from './ArbitraryCodeCardContent';
 import CardModal from './CardModal';
 import { decode, formatDate } from './utils';
 import spoiler from './spoiler.png'
+import { VisibilityOff, Explicit, PriorityHigh, Collections, Link as LinkIcon } from '@mui/icons-material';
+
 
 
 
@@ -46,25 +48,63 @@ export default function RedditCard({ post }) {
 
 
 
-    const imageContent = ({ thumbnail, thumbnail_height, title, is_self, preview }) => {
+    const imageContent = ({ thumbnail, thumbnail_height, title, is_self, url, preview, over_18, spoiler, stickied }) => {
         if (is_self) return null
 
         const preview_images = preview?.images
         const preview_images_source_url = preview_images && preview_images.length > 0 && preview_images[0].source?.url
 
-        const image = thumbnail === "spoiler" ? spoiler :
-                      thumbnail === "nsfw" ? preview_images_source_url :
-                      thumbnail === "image" ? url :
-                      thumbnail === "default" ? preview_images_source_url : thumbnail
 
-        return image && (<CardMedia
-            onClick={handleOpen}
-            component="img"
-            // width={thumbnail_width}
-            height={thumbnail_height}
-            image={decode(image)}
-            alt={thumbnail}
-            sx={{ objectFit: "contain" }} />)
+
+
+        const image = thumbnail === "spoiler" ? spoiler :
+            thumbnail === "nsfw" ? preview_images_source_url :
+                thumbnail === "image" ? url :
+                    thumbnail === "default" ? preview_images_source_url : thumbnail
+
+        return image && (
+            <Box sx={{
+                position: 'relative',
+                width: "100%"
+            }}>
+                <CardMedia
+                    onClick={handleOpen}
+                    component="img"
+                    // width={thumbnail_width}
+                    // height={thumbnail_height}
+                    width="100%"
+                    image={decode(image)}
+                    alt={thumbnail}
+
+                    sx={{ objectFit: "contain" }} />
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        width: '100%',
+                        bgcolor: 'rgba(0, 0, 0, 0.54)',
+                        color: 'white',
+                        padding: '10px',
+                    }}
+                >
+                    <Typography variant="body2">{title.substring(0, 30)}</Typography>
+                    <Typography variant="subtitle2">
+                        {over_18 && <Chip icon={<Explicit sx={{ color: "white", background: "red" }} fontSize="small"/>} />}
+                        {spoiler && <Chip icon={<VisibilityOff sx={{ color: "white",background: "yellow" }} fontSize="small"/>} />}
+                        {stickied && <Chip icon={<PriorityHigh sx={{ color: "white",background: "green" }} fontSize="small"/>} />}
+                        {is_gallery && <Collections sx={{ color: "white" }} fontSize="small"/>}
+                        <Icon baseClassName="fas" className="fa-plus-circle" />
+                        <Link target="_blank" to={url} ><LinkIcon sx={{ color: "white" }} fontSize="small" /></Link>
+                        <Link style={{ color: "white" }} to={`/r/${subreddit}`}>/r/{subreddit}</Link>
+                        {' | '}
+                        <Link style={{ color: "white" }} to={`/user/${author}`}> u/{author} </Link>
+                        </Typography>
+                    {crosspost_parent_list && (<Typography variant="body2">:
+                        <Link style={{ color: "white" }} to={`/r/${crosspost_parent_list[0].subreddit}`}>/r/{crosspost_parent_list[0].subreddit}</Link>
+                    </Typography>)}
+                </Box>
+            </Box>)
     }
 
 
@@ -98,8 +138,8 @@ export default function RedditCard({ post }) {
     // Responsive style for the RedditBox
     const boxStyle = {
         border: '1px solid gray',
-        padding: '10px',
-        margin: '10px',
+        padding: '2px',
+        margin: '0px',
         width: '100%', // Full width on smaller screens
         maxWidth: '300px', // Fixed max width on larger screens
         overflow: 'hidden'
@@ -108,28 +148,7 @@ export default function RedditCard({ post }) {
     return (
         <Box style={boxStyle}>
             <Card>
-                <CardContent>
-                    <Typography variant="body2">
-                        {post.over_18 && <span style={{ color: 'red' }}>NSFW </span>}
-                        {post.spoiler && <span style={{ color: 'orange' }}>Spoiler </span>}
-                        {post.stickied && <span style={{ color: 'green' }}>Sticky </span>}
-                        {is_gallery && <span style={{ color: 'pink' }}>Gallery </span>}
-                        <Link to={`/r/${subreddit}`}>/r/{subreddit}</Link>
-                        {' | '}
-                        <Link to={`/user/${author}`}> u/{author} </Link>
-                        <p style={{ margin: '0px 0px 0px 1em', fontStyle: 'italic' }}>{formatDate(created_utc)}</p>
-                    </Typography>
-                    {crosspost_parent_list && (<Typography variant="body2">Crosspost: 
-                    <Link to={`/r/${crosspost_parent_list[0].subreddit}`}>/r/{crosspost_parent_list[0].subreddit}</Link>
-                        {' | '}
-                        <Link to={`/user/${crosspost_parent_list[0].author}`}> u/{crosspost_parent_list[0].author} </Link>
-                    </Typography>)}
-                    <Typography variant='subtitle2'>{title}</Typography>
-                </CardContent>
                 {imagepart && imagepart}
-                <CardContent>
-                    <Typography variant="body2"><Link target="_blank" to={url}>{domain}</Link></Typography>
-                </CardContent>
 
                 {content && content.length > 0 && <ArbitraryCodeCardContent code={content} />}
                 <ArbitraryCodeCardContent code={formatted_post} />
