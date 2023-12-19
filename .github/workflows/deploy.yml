@@ -12,11 +12,14 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
+      with:
+        persist-credentials: false 
 
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '20.10.0' # Latest LTS
+
     - name: Configure Git
       run: |
         git config --global user.email "m0smith@yahoo.com"
@@ -27,3 +30,5 @@ jobs:
 
     - name: Deploy
       run: yarn deploy
+      env:
+        GH_TOKEN: ${{ secrets.GH_DEPLOY }} 
