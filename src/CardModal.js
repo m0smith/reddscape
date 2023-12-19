@@ -11,7 +11,7 @@ import ImageGallery from "react-image-gallery"
 
 export default function CardModal({ post, open, handleClose }) {
 
-    const { is_video, thumbnail, title, is_reddit_media_domain, media, domain, url, preview, post_hint, is_gallery, gallery_data, media_metadata } = post
+    const { is_video, title, is_reddit_media_domain, media, domain, url, preview, is_gallery, gallery_data, media_metadata } = post
 
     const urlDomains = new Set(["i.imgur.com", "imgur.com"])
     const preview_images = preview?.images
@@ -63,6 +63,7 @@ export default function CardModal({ post, open, handleClose }) {
                     setImageUrl(fallbackImageUrl); // Fallback for any other network errors
                 });
         }
+        // eslint-disable-next-line 
     }, []); // Empty dependency array to run only once on mount
     const boxStyle = {
         border: '1px solid gray',

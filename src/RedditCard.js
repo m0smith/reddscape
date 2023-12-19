@@ -1,33 +1,20 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
+import React from 'react';
 
 import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
 
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
-
-import { Close, Visibility } from '@mui/icons-material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
+import { Collections, Explicit, Link as LinkIcon, PriorityHigh, VisibilityOff } from '@mui/icons-material';
+import { Box, CardMedia, Chip } from '@mui/material';
+import stringify from 'json-stable-stringify';
 import { Link } from 'react-router-dom';
-import { Box, CardHeader, CardMedia, Chip, Icon } from '@mui/material';
-import stringify from 'json-stable-stringify'
 import ArbitraryCodeCardContent from './ArbitraryCodeCardContent';
 import CardModal from './CardModal';
-import { decode, formatDate } from './utils';
-import spoiler from './spoiler.png'
-import { VisibilityOff, Explicit, PriorityHigh, Collections, Link as LinkIcon } from '@mui/icons-material';
-
-
-
+import { decode } from './utils';
 
 export default function RedditCard({ post, onSubredditClick }) {
-    const { url, spoiler, over_18, stickied, subreddit, author, crosspost_parent_list, selftext, selftext_html, created_utc, is_video, preview, thumbnail, title, removed_by_category, is_gallery } = post
+    const { url, spoiler, over_18, stickied, subreddit, author, crosspost_parent_list, selftext, selftext_html,  title, is_gallery } = post
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => {
         console.log("open")
@@ -38,10 +25,10 @@ export default function RedditCard({ post, onSubredditClick }) {
         setOpen(false);
     }
 
-    const isVideo = is_video || preview?.reddit_video_preview
-    //console.log(post.thumbnail, post.is_video)
-    let thumbnailggg = thumbnail.startsWith('http') ? thumbnail : null
-    let fullImageUrl = null
+    // const isVideo = is_video || preview?.reddit_video_preview
+    // console.log(post.thumbnail, post.is_video)
+    // let thumbnailggg = thumbnail.startsWith('http') ? thumbnail : null
+    // let fullImageUrl = null
 
 
     const content = selftext_html ? decode(selftext_html) : selftext
@@ -107,10 +94,10 @@ export default function RedditCard({ post, onSubredditClick }) {
     }
 
 
-    if (removed_by_category) {
-        thumbnailggg = null
-        fullImageUrl = null
-    } // else if (isVideo) {
+    // if (removed_by_category) {
+    //     thumbnailggg = null
+    //     fullImageUrl = null
+    // } // else if (isVideo) {
     //     [thumbnailggg, fullImageUrl] = default_video(post)
     // } else if (post.is_reddit_media_domain) {
     //     [thumbnailggg, fullImageUrl] = gif_image(post)
@@ -134,7 +121,7 @@ export default function RedditCard({ post, onSubredditClick }) {
     }
     const formatted_post = ("<pre>" + ordered_json(post) + "</pre>")
     const imagepart = imageContent(post)
-    // Responsive style for the RedditBox
+    // Responsive style
     const boxStyle = {
         border: '1px solid gray',
         padding: '2px',
@@ -177,24 +164,4 @@ export default function RedditCard({ post, onSubredditClick }) {
         </Box>
     )
 
-    // return <RedditCard
-    //     key={post.id}
-    //     id={post.id}
-    //     title={post.title}
-    //     author={post.author}
-    //     url={post.url}
-    //     domain={post.domain}
-    //     selftext={selftext}
-    //     thumbnail={thumbnail}
-    //     fullImageUrl={fullImageUrl}
-    //     numComments={post.num_comments}
-    //     permalink={post.permalink}
-    //     subreddit={post.subreddit}
-    //     isNSFW={post.over_18}
-    //     created_utc={post.created_utc}
-    //     isSpoiler={post.spoiler}
-    //     isStickied={post.stickied}
-    //     isVideo={isVideo}
-    //     crosspostParent={post.crosspost_parent_list ? post.crosspost_parent_list[0] : null}
-    // />
 }

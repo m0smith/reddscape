@@ -1,13 +1,7 @@
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import RedditBox from './RedditBox';
-import RedditLayout from './RedditLayout';
+import React, { useEffect, useState } from 'react';
 import RedditCard from './RedditCard';
-
-import { Box, Card, CardContent, Link, CardMedia, Typography, Dialog } from '@mui/material'
-import { Close } from '@mui/icons-material';
-
-
+import RedditLayout from './RedditLayout';
 
 const RedditApp = ({ type, name, default_category }) => {
 
@@ -44,13 +38,6 @@ const RedditApp = ({ type, name, default_category }) => {
         };
     };
 
-    function decode(str) {
-
-        let txt = new DOMParser().parseFromString(str, "text/html");
-
-        return txt.documentElement.textContent;
-
-    }
 
     const handleSubredditChange = debounce((newSubreddit) => {
         setDebouncedSubreddit(newSubreddit);
@@ -136,36 +123,36 @@ const RedditApp = ({ type, name, default_category }) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isLoading]); // `isLoading` is a dependency here
 
-    const default_video = (post) => {
-        const full = post.media ? post.media.reddit_video?.fallback_url : post.preview.reddit_video_preview.fallback_url
-        return [post.preview ? decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url) : full,
-            full]
+    // const default_video = (post) => {
+    //     const full = post.media ? post.media.reddit_video?.fallback_url : post.preview.reddit_video_preview.fallback_url
+    //     return [post.preview ? decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url) : full,
+    //         full]
 
-    }
+    // }
 
-    const gif_image = (post) => {
-        const thumbnail = post.preview?.images ? decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url) : post.url
-        return [thumbnail,
-            post.url]
+    // const gif_image = (post) => {
+    //     const thumbnail = post.preview?.images ? decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0].url) : post.url
+    //     return [thumbnail,
+    //         post.url]
 
-    }
+    // }
 
-    const default_image = (post) => {
-        return [decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0]?.url),
-        decode(post.preview.images.slice(-1)[0].source?.url)]
-    }
+    // const default_image = (post) => {
+    //     return [decode(post.preview.images.slice(-1)[0].resolutions.slice(-1)[0]?.url),
+    //     decode(post.preview.images.slice(-1)[0].source?.url)]
+    // }
 
-    const default_gallery = (post) => {
-        const gallery_id = post.gallery_data ? post.gallery_data.items[0].media_id : null
-        if (!gallery_id) {
-            console.log(post)
-        }
-        return [post.thumbnail, gallery_id ? decode(post.media_metadata[gallery_id].s?.u) : null]
-    }
+    // const default_gallery = (post) => {
+    //     const gallery_id = post.gallery_data ? post.gallery_data.items[0].media_id : null
+    //     if (!gallery_id) {
+    //         console.log(post)
+    //     }
+    //     return [post.thumbnail, gallery_id ? decode(post.media_metadata[gallery_id].s?.u) : null]
+    // }
 
 
 
-   
+
 
 
 
@@ -198,7 +185,7 @@ const RedditApp = ({ type, name, default_category }) => {
             <RedditLayout>
                 {posts.map(post => {
                     return (<RedditCard post={post}></RedditCard>)
-                    })}
+                })}
             </RedditLayout>
             {isLoading && <div>Loading more posts...</div>}
         </div>
