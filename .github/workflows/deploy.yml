@@ -17,6 +17,10 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '20.10.0' # Latest LTS
+    - name: Configure Git
+      run: |
+        git config --global user.email "m0smith@yahoo.com"
+        git config --global user.name "Matthew O. Smith"
 
     - name: Install Dependencies
       run: yarn install
