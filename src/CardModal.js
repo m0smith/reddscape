@@ -44,7 +44,7 @@ export default function CardModal({ post, open, handleClose }) {
     const [imageUrl, setImageUrl] = useState(primaryImageUrl);
 
     useEffect(() => {
-        console.log("useeffest")
+        // console.log("useeffest")
         if (!primaryImageUrl) {
             setImageUrl(fallbackImageUrl)
         } else {
@@ -52,7 +52,7 @@ export default function CardModal({ post, open, handleClose }) {
                 method: 'HEAD', // Only need to check the headers, not the full image
             })
                 .then(response => {
-                    console.log(response)
+                    // console.log(response)
                     if (response.status === 302) {
                         setImageUrl(fallbackImageUrl);
                     } else if (response.redirected && response.url.endsWith("removed.png")) {
@@ -72,7 +72,7 @@ export default function CardModal({ post, open, handleClose }) {
         //maxWidth: '200px', // Fixed max width on larger screens
         overflow: 'hidden'
     };
-    console.log("IMGE:" + imageUrl)
+    // console.log("IMGE:" + imageUrl)
     return (<Dialog
         open={open}
         onClose={handleClose}
@@ -83,7 +83,7 @@ export default function CardModal({ post, open, handleClose }) {
         <IconButton sx={{ ml: 'auto' }} onClick={handleClose}>
             <Close />
         </IconButton>
-        {is_gallery && <ImageGallery useBrowserFullscreen="false" items={items} thumbnailPosition="top" style={{ width: '100%', height: 'auto' }} />}
+        {is_gallery && <ImageGallery useBrowserFullscreen="false" items={items} thumbnailPosition="top" style={{ width: 'auto', height: 'auto' }} />}
         {!is_gallery && <Card fullWidth
             maxWidth="xl">
             <CardContent>{title}</CardContent>
@@ -105,36 +105,3 @@ export default function CardModal({ post, open, handleClose }) {
     </Dialog >)
 }
 
-// if (!src) return null;
-//   return (
-//     <div style={{
-//         position: 'fixed', 
-//         top: 0, 
-//         left: 0, 
-//         right: 0, 
-//         bottom: 0, 
-//         backgroundColor: 'rgba(0, 0, 0, 0.8)', 
-//         display: 'flex', 
-//         alignItems: 'center', 
-//         justifyContent: 'center', 
-//         zIndex: 1000
-//     }}>
-//     <Card sx={{ maxWidth: '100%' }}>
-//       <CardActionArea   onClick={onClose}>
-//         <CardMedia
-//           component={isVideo? "video": "img"}
-//           autoPlay={isVideo}
-//           controls={isVideo}
-//           image={src}
-//           alt={alt}
-//         />
-//       </CardActionArea>
-//       <CardActions>
-//         <Button size="small" color="primary">
-//           Share
-//         </Button>
-//       </CardActions>
-//     </Card>
-//     </div>
-//   );
-// }

@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 
-function ArbitraryCodeCardContent({ code }) {
+function ArbitraryCodeCardContent({ code, snippet_length=30 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleCard = () => {

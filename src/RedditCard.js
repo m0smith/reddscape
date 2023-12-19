@@ -15,7 +15,7 @@ import { Close, Visibility } from '@mui/icons-material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { Link } from 'react-router-dom';
-import { Box, CardHeader, CardMedia, Chip , Icon} from '@mui/material';
+import { Box, CardHeader, CardMedia, Chip, Icon } from '@mui/material';
 import stringify from 'json-stable-stringify'
 import ArbitraryCodeCardContent from './ArbitraryCodeCardContent';
 import CardModal from './CardModal';
@@ -26,8 +26,8 @@ import { VisibilityOff, Explicit, PriorityHigh, Collections, Link as LinkIcon } 
 
 
 
-export default function RedditCard({ post }) {
-    const { url, domain, subreddit, author, crosspost_parent_list, selftext, selftext_html, created_utc, is_video, preview, thumbnail, title, removed_by_category, is_gallery } = post
+export default function RedditCard({ post, onSubredditClick }) {
+    const { url, spoiler, over_18, stickied, subreddit, author, crosspost_parent_list, selftext, selftext_html, created_utc, is_video, preview, thumbnail, title, removed_by_category, is_gallery } = post
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => {
         console.log("open")
@@ -48,7 +48,7 @@ export default function RedditCard({ post }) {
 
 
 
-    const imageContent = ({ thumbnail, thumbnail_height, title, is_self, url, preview, over_18, spoiler, stickied }) => {
+    const imageContent = ({ thumbnail, thumbnail_height, title, is_self, url, preview, over_18, spoiler, stickied}) => {
         if (is_self) return null
 
         const preview_images = preview?.images
@@ -88,18 +88,17 @@ export default function RedditCard({ post }) {
                         padding: '10px',
                     }}
                 >
-                    <Typography variant="body2">{title.substring(0, 30)}</Typography>
+                    <Typography variant="body2">{title.substring(0, 50)}</Typography>
                     <Typography variant="subtitle2">
-                        {over_18 && <Chip icon={<Explicit sx={{ color: "white", background: "red" }} fontSize="small"/>} />}
-                        {spoiler && <Chip icon={<VisibilityOff sx={{ color: "white",background: "yellow" }} fontSize="small"/>} />}
-                        {stickied && <Chip icon={<PriorityHigh sx={{ color: "white",background: "green" }} fontSize="small"/>} />}
-                        {is_gallery && <Collections sx={{ color: "white" }} fontSize="small"/>}
-                        <Icon baseClassName="fas" className="fa-plus-circle" />
+                        {over_18 && <Chip icon={<Explicit sx={{ color: "white", background: "red" }} fontSize="small" />} />}
+                        {spoiler && <Chip icon={<VisibilityOff sx={{ color: "white", background: "yellow" }} fontSize="small" />} />}
+                        {stickied && <Chip icon={<PriorityHigh sx={{ color: "white", background: "green" }} fontSize="small" />} />}
+                        {is_gallery && <Collections sx={{ color: "white" }} fontSize="small" />}
                         <Link target="_blank" to={url} ><LinkIcon sx={{ color: "white" }} fontSize="small" /></Link>
                         <Link style={{ color: "white" }} to={`/r/${subreddit}`}>/r/{subreddit}</Link>
                         {' | '}
-                        <Link style={{ color: "white" }} to={`/user/${author}`}> u/{author} </Link>
-                        </Typography>
+                        <Link style={{ color: "white" }} to={`/user/${author}`}>/u/{author}</Link>
+                    </Typography>
                     {crosspost_parent_list && (<Typography variant="body2">:
                         <Link style={{ color: "white" }} to={`/r/${crosspost_parent_list[0].subreddit}`}>/r/{crosspost_parent_list[0].subreddit}</Link>
                     </Typography>)}
@@ -149,9 +148,29 @@ export default function RedditCard({ post }) {
         <Box style={boxStyle}>
             <Card>
                 {imagepart && imagepart}
+                {! imagepart && (
+                    <CardContent>
 
-                {content && content.length > 0 && <ArbitraryCodeCardContent code={content} />}
-                <ArbitraryCodeCardContent code={formatted_post} />
+                        <Typography variant="body2">{title}</Typography>
+                        <Typography variant="subtitle2">
+                            {over_18 && <Chip icon={<Explicit sx={{ color: "red", background: "grey" }} fontSize="small" />} />}
+                            {spoiler && <VisibilityOff sx={{ color: "yellow", background: "grey" }} fontSize="small" />}
+                            {stickied && <PriorityHigh sx={{ color: "green", background: "grey" }} fontSize="small" />}
+                            {is_gallery && <Collections fontSize="small" />}
+                            <Link target="_blank" to={url} ><LinkIcon  fontSize="small" /></Link>
+                            <Link  to={`/r/${subreddit}`}>/r/{subreddit}</Link>
+                            {' | '}
+                            <Link to={`/user/${author}`}> u/{author} </Link>
+                        </Typography>
+                        {crosspost_parent_list && (<Typography variant="body2">:
+                            <Link  to={`/r/${crosspost_parent_list[0].subreddit}`}>/r/{crosspost_parent_list[0].subreddit}</Link>
+                        </Typography>)}
+
+                    </CardContent>
+                )}
+
+                {content && content.length > 0 && <ArbitraryCodeCardContent code={content} snippet_length="100"/>}
+                <ArbitraryCodeCardContent code={formatted_post} snippet_length="100" />
                 {imagepart && (<CardModal post={post} handleClose={handleClose} open={open} />)}
             </Card>
 
