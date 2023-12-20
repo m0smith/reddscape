@@ -27,6 +27,11 @@ jobs:
 
     - name: Install Dependencies
       run: yarn install
+    
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: build # The folder the action should deploy.
 
     - name: Deploy
       run: yarn deploy
