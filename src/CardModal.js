@@ -3,11 +3,12 @@ import Card from '@mui/material/Card';
 import { useState, useEffect } from 'react';
 
 import CardMedia from '@mui/material/CardMedia';
-import { Dialog, IconButton, CardContent } from '@mui/material';
+import { Dialog, IconButton, CardContent, Typography } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 import { decode } from './utils';
 import ImageGallery from "react-image-gallery"
+import './CardModal.css'
 
 export default function CardModal({ post, open, handleClose }) {
 
@@ -71,7 +72,9 @@ export default function CardModal({ post, open, handleClose }) {
         margin: '10px',
         width: '100%', // Full width on smaller screens
         //maxWidth: '200px', // Fixed max width on larger screens
-        overflow: 'hidden'
+        maxWidth: "xl",
+        maxHeight: '90vh',
+        overflow: 'auto'
     };
     // console.log("IMGE:" + imageUrl)
     return (<Dialog
@@ -84,24 +87,39 @@ export default function CardModal({ post, open, handleClose }) {
         <IconButton sx={{ ml: 'auto' }} onClick={handleClose}>
             <Close />
         </IconButton>
-        {is_gallery && <ImageGallery useBrowserFullscreen="false" items={items} thumbnailPosition="top" style={{ width: 'auto', height: 'auto' }} />}
-        {!is_gallery && <Card fullWidth
+        <Card fullWidth
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px' }}
             maxWidth="xl">
-            <CardContent>{title}</CardContent>
-            <CardContent>Image: {primaryImageUrl}</CardContent>
 
-            <CardMedia
-                component={treatAsVideo ? "video" : "img"}
-                autoPlay={treatAsVideo}
-                controls={treatAsVideo}
-                loop={treatAsVideo}
-                muted={treatAsVideo}
-                style={{ width: '100%', height: '90%' }}
-                src={imageUrl}
-                alt={title}
-            />
+            <CardContent>
+                <Typography variant="body2">{title}</Typography>
+                <Typography variant="body2">Image: {primaryImageUrl}</Typography>
+            </CardContent>
 
-        </Card>}
+            {is_gallery ?
+
+                <ImageGallery useBrowserFullscreen="false"
+                    items={items}
+                    thumbnailPosition="top"
+                    style={{ width: 'auto', maxWidth: '100%', margin: 'auto', overflow: 'auto' }} />
+                :
+
+                <>
+
+
+                    <CardMedia
+                        component={treatAsVideo ? "video" : "img"}
+                        autoPlay={treatAsVideo}
+                        controls={treatAsVideo}
+                        loop={treatAsVideo}
+                        muted={treatAsVideo}
+                        style={{ width: 'auto', maxWidth: '100%', maxHeight: '80vh', margin: 'auto' }}
+                        src={imageUrl}
+                        alt={title}
+                    />
+                </>}
+
+        </Card>
 
     </Dialog >)
 }
