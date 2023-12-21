@@ -1,7 +1,7 @@
 import React from 'react';
 import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import SubredditComponent from './SubredditComponent'; // Import your subreddit component
-import UserPostsComponent from './UserPostsComponent';
+import SubredditComponent from './components/SubredditComponent'; // Import your subreddit component
+import UserPostsComponent from './components/UserPostsComponent';
  
 const App = () => {
     return (

@@ -1,10 +1,11 @@
 import { Settings } from '@mui/icons-material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import RedditCard from './RedditCard';
+import RedditCard from '../RedditCard';
 import RedditLayout from './RedditLayout';
-import SettingsModal from './SettingsModal';
+import SettingsModal from '../SettingsModal';
 import { AppBar, Toolbar } from '@mui/material';
+import logo from '../assets/reddscape-logo.png'
 
 const RedditApp = ({ type, name, default_category }) => {
 
@@ -174,12 +175,18 @@ const RedditApp = ({ type, name, default_category }) => {
     }
 
 
+    const appBarStyle = {
+        background: 'linear-gradient(to top, #ff7e5f, #feb47b)', // Sunset gradient
+        top: 0, 
+        zIndex: 1100
+    };
 
 
     return (
         <>
-            <AppBar className="App">
+            <AppBar className="App" position="fixed" style={appBarStyle}>
                 <Toolbar>
+                    <img src={logo} alt="Logo" style={{ marginRight: 10}} height={50} />
                     {type}
                     <input
                         type="text"
