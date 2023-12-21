@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import RedditCard from './RedditCard';
 import RedditLayout from './RedditLayout';
 import SettingsModal from './SettingsModal';
+import { AppBar, Toolbar } from '@mui/material';
 
 const RedditApp = ({ type, name, default_category }) => {
 
@@ -176,33 +177,36 @@ const RedditApp = ({ type, name, default_category }) => {
 
 
     return (
-        <div className="App">
-            {type}
-            <input
-                type="text"
-                value={name}
-                onChange={(e) => newSubreddit(e.target.value)}
-                placeholder="Enter subreddit"
-            />
-            <select value={category} onChange={(e) => handleCategory(e.target.value)}>
-                <option value="hot">Hot</option>
-                <option value="new">New</option>
-                <option value="rising">Rising</option>
-                <option value="top">Top</option>
-                <option value="controversial">Controversial</option>
-                <option value="submitted">Submitted</option>
+        <>
+            <AppBar className="App">
+                <Toolbar>
+                    {type}
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => newSubreddit(e.target.value)}
+                        placeholder="Enter subreddit"
+                    />
+                    <select value={category} onChange={(e) => handleCategory(e.target.value)}>
+                        <option value="hot">Hot</option>
+                        <option value="new">New</option>
+                        <option value="rising">Rising</option>
+                        <option value="top">Top</option>
+                        <option value="controversial">Controversial</option>
+                        <option value="submitted">Submitted</option>
 
-            </select>
-            <Settings onClick={handleOpenSettings} />
-            <SettingsModal settings={settings}  handleClose={handleCloseSettings} open={openSettings} />
-
+                    </select>
+                    <Settings onClick={handleOpenSettings} />
+                    <SettingsModal settings={settings} handleClose={handleCloseSettings} open={openSettings} />
+                </Toolbar>
+            </AppBar>
             <RedditLayout>
                 {posts.map(post => {
                     return (<RedditCard post={post}></RedditCard>)
                 })}
             </RedditLayout>
             {isLoading && <div>Loading more posts...</div>}
-        </div>
+        </>
     );
 };
 

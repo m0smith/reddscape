@@ -1,10 +1,11 @@
+import { Box } from '@mui/material';
 import React from 'react';
 
 const RedditLayout = ({ children }) => {
     return (
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: "0px" }}>
+        <Box style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: "0px" }}>
             {children}
-        </div>
+        </Box>
     );
 };
 
