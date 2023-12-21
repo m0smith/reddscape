@@ -3,7 +3,11 @@ import DOMPurify from 'dompurify';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 
-function ArbitraryCodeCardContent({ code, showMore="Show More", showLess="Show Less", snippet_length=30 }) {
+function ArbitraryCodeCardContent({ 
+      code, 
+      showMore="Show More", 
+      showLess="Show Less", 
+      snippet_length=30 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleCard = () => {
@@ -14,6 +18,7 @@ function ArbitraryCodeCardContent({ code, showMore="Show More", showLess="Show L
 
   return (
     <div>
+      {snippet_length > 0 && 
       <CardContent
         sx={{
           height: isExpanded ? 'auto' : '30px',
@@ -22,11 +27,11 @@ function ArbitraryCodeCardContent({ code, showMore="Show More", showLess="Show L
           
         }}
         dangerouslySetInnerHTML={{
-          __html: isExpanded ? sanitizedCode : sanitizedCode.slice(0, 30),
+          __html: isExpanded ? sanitizedCode : sanitizedCode.slice(0, snippet_length),
         }}
-      />
+      />}
       <Button onClick={toggleCard}>
-        {isExpanded ? 'Show Less' : 'Show More'}
+        {isExpanded ? showLess : showMore}
       </Button>
     </div>
   );

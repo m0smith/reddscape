@@ -1,19 +1,22 @@
+import { Settings } from '@mui/icons-material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import RedditCard from './RedditCard';
 import RedditLayout from './RedditLayout';
+import SettingsModal from './SettingsModal';
 
 const RedditApp = ({ type, name, default_category }) => {
 
     const [posts, setPosts] = useState([]);
     // const [subreddit, setSubreddit] = useState('popular'); // Default subreddit
     const [category, setCategory] = useState(default_category); // Default category
-    const [includeNSFW, setIncludeNSFW] = useState(false); // NSFW toggle
+
     const [after, setAfter] = useState(null); // To keep track of pagination
     const [isLoading, setIsLoading] = useState(false); // To manage loading state
     const [loadMore, setLoadMore] = useState(true);
     const [debouncedSubreddit, setDebouncedSubreddit] = useState(name);
-
+    const [openSettings, setOpenSettings] = React.useState(false);
+    const [settings, setSettings] = useState({ nsfw: false })
 
 
     if (name !== debouncedSubreddit) {
@@ -43,6 +46,8 @@ const RedditApp = ({ type, name, default_category }) => {
         setDebouncedSubreddit(newSubreddit);
     }, 500); // 500ms delay
 
+    const includeNSFW = settings.nsfw
+
     useEffect(() => {
         console.log("useEffect:" + loadMore + " " + isLoading)
         if (loadMore && !isLoading) {
@@ -66,7 +71,7 @@ const RedditApp = ({ type, name, default_category }) => {
         }
     },
         // eslint-disable-next-line 
-        [debouncedSubreddit, category, includeNSFW, after, loadMore]); // Add includeNSFW as a dependency
+        [debouncedSubreddit, category, settings, after, loadMore]); // Add includeNSFW as a dependency
 
 
 
@@ -84,16 +89,15 @@ const RedditApp = ({ type, name, default_category }) => {
 
     };
 
-    const handleNsfw = () => {
-        setLoadMore(false);
-        setAfter(null);
-        setPosts([])
-        setIncludeNSFW((f) => !f)
-        setIsLoading(false)
-        setLoadMore(true);
+    // const handleNsfw = () => {
+    //     setLoadMore(false);
+    //     setAfter(null);
+    //     setPosts([])
+    //     setIncludeNSFW((f) => !f)
+    //     setIsLoading(false)
+    //     setLoadMore(true)
 
-
-    }
+    // }
 
     const handleCategory = (v) => {
         setLoadMore(false);
@@ -151,7 +155,22 @@ const RedditApp = ({ type, name, default_category }) => {
     // }
 
 
+    const handleCloseSettings = (newSettings) => {
+        setLoadMore(false);
+        console.log("close settings")
+        console.log(newSettings)
+        setOpenSettings(false);
+        setAfter(null);
+        setPosts([])
+        setSettings(newSettings)
+        setIsLoading(false)
+        setLoadMore(true)
+    }
 
+    const handleOpenSettings = () => {
+        console.log("open")
+        setOpenSettings(true);
+    }
 
 
 
@@ -174,14 +193,9 @@ const RedditApp = ({ type, name, default_category }) => {
                 <option value="submitted">Submitted</option>
 
             </select>
-            <label>
-                Include NSFW
-                <input
-                    type="checkbox"
-                    checked={includeNSFW}
-                    onChange={handleNsfw}
-                />
-            </label>
+            <Settings onClick={handleOpenSettings} />
+            <SettingsModal settings={settings}  handleClose={handleCloseSettings} open={openSettings} />
+
             <RedditLayout>
                 {posts.map(post => {
                     return (<RedditCard post={post}></RedditCard>)
