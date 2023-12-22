@@ -117,6 +117,9 @@ export default function CardModal({ post, open, handleClose }) {
                         animation="slide"
                         autoPlay={false}
                         navButtonsAlwaysVisible={true}
+                        sx={{
+                            width: "90%"
+                        }}
                         // navButtonsProps={{ 
                         //     style: customNavButtonStyles 
                         // }}
@@ -126,18 +129,31 @@ export default function CardModal({ post, open, handleClose }) {
                             items.map((item, i) => {
                                 console.log(item)
                                 return (
+                                    // <img
+                                        
+                                    //     src={item.original}
+                                    //     alt={`Carousel item ${i}`}
+                                    //     style={{
+                                    //         maxHeight: '100%',
+                                    //         maxWidth: '100%',
+                                    //         objectFit: 'contain',
+                                    //     }}
+                                    //     // onClick={() => handleImageClick(image)}
+                                    // />
                                 <Paper
                                     key={i}
-                                    elevation={0}
+                                    elevation={10}
                                     style={{
                                         display: 'flex',
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        height: 'auto',
-                                        width: '100%',
+                                        // height: 'auto',
+                                        maxidth: '100%',
+                                        // height: 500
                                         // width: item.originalWidth
                                     }}
                                 >
+
                                     <img
                                         src={item.original}
                                         alt={`Carousel item ${i}`}
@@ -148,7 +164,8 @@ export default function CardModal({ post, open, handleClose }) {
                                         }}
                                         // onClick={() => handleImageClick(image)}
                                     />
-                                </Paper>)
+                                </Paper>
+                                )
                                 // return <img width={item.originalWidth} height={item.originalHeight} key={i} src={} alt="hamster" />
                             })
                             // items.map( (item, i) => <Item key={i} item={item} /> )
