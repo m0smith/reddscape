@@ -6,15 +6,15 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
 import { Collections, Explicit, Link as LinkIcon, PriorityHigh, VisibilityOff } from '@mui/icons-material';
-import { Box, CardMedia, Chip } from '@mui/material';
+import { Box, CardMedia, Chip, Toolbar } from '@mui/material';
 import stringify from 'json-stable-stringify';
 import { Link } from 'react-router-dom';
-import ArbitraryCodeCardContent from './ArbitraryCodeCardContent';
+import ArbitraryCodeCardContent from '../ArbitraryCodeCardContent';
 import CardModal from './CardModal';
-import { decode } from './utils';
+import { decode } from '../utils';
 
 export default function RedditCard({ post, onSubredditClick }) {
-    const { url, spoiler, over_18, stickied, subreddit, author, crosspost_parent_list, selftext, selftext_html,  title, is_gallery } = post
+    const { url, spoiler, over_18, stickied, subreddit, author, crosspost_parent_list, selftext, selftext_html, title, is_gallery } = post
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => {
         console.log("open")
@@ -35,7 +35,7 @@ export default function RedditCard({ post, onSubredditClick }) {
 
 
 
-    const imageContent = ({ thumbnail, thumbnail_height, title, is_self, url, preview, over_18, spoiler, stickied}) => {
+    const imageContent = ({ thumbnail, thumbnail_height, title, is_self, url, preview, over_18, spoiler, stickied }) => {
         if (is_self) return null
 
         const preview_images = preview?.images
@@ -135,28 +135,28 @@ export default function RedditCard({ post, onSubredditClick }) {
         <Box style={boxStyle}>
             <Card>
                 {imagepart && imagepart}
-                {! imagepart && (
+                {!imagepart && (
                     <CardContent>
-
-                        <Typography variant="body2">{title}</Typography>
-                        <Typography variant="subtitle2">
-                            {over_18 && <Chip icon={<Explicit sx={{ color: "red", background: "grey" }} fontSize="small" />} />}
-                            {spoiler && <VisibilityOff sx={{ color: "yellow", background: "grey" }} fontSize="small" />}
-                            {stickied && <PriorityHigh sx={{ color: "green", background: "grey" }} fontSize="small" />}
-                            {is_gallery && <Collections fontSize="small" />}
-                            <Link target="_blank" to={url} ><LinkIcon  fontSize="small" /></Link>
-                            <Link  to={`/r/${subreddit}`}>/r/{subreddit}</Link>
-                            {' | '}
-                            <Link to={`/user/${author}`}> u/{author} </Link>
-                        </Typography>
-                        {crosspost_parent_list && (<Typography variant="body2">:
-                            <Link  to={`/r/${crosspost_parent_list[0].subreddit}`}>/r/{crosspost_parent_list[0].subreddit}</Link>
-                        </Typography>)}
-
+                        <Toolbar>
+                            <Typography variant="body2">{title}</Typography>
+                            <Typography variant="subtitle2">
+                                {over_18 && <Chip icon={<Explicit sx={{ color: "red", background: "grey" }} fontSize="small" />} />}
+                                {spoiler && <VisibilityOff sx={{ color: "yellow", background: "grey" }} fontSize="small" />}
+                                {stickied && <PriorityHigh sx={{ color: "green", background: "grey" }} fontSize="small" />}
+                                {is_gallery && <Collections fontSize="small" />}
+                                <Link target="_blank" to={url} ><LinkIcon fontSize="small" /></Link>
+                                <Link to={`/r/${subreddit}`}>/r/{subreddit}</Link>
+                                {' | '}
+                                <Link to={`/user/${author}`}> u/{author} </Link>
+                            </Typography>
+                            {crosspost_parent_list && (<Typography variant="body2">:
+                                <Link to={`/r/${crosspost_parent_list[0].subreddit}`}>/r/{crosspost_parent_list[0].subreddit}</Link>
+                            </Typography>)}
+                        </Toolbar>
                     </CardContent>
                 )}
 
-                {content && content.length > 0 && <ArbitraryCodeCardContent code={content} snippet_length="100"/>}
+                {content && content.length > 0 && <ArbitraryCodeCardContent code={content} snippet_length="100" />}
                 <ArbitraryCodeCardContent code={formatted_post} snippet_length="100" />
                 {imagepart && (<CardModal post={post} handleClose={handleClose} open={open} />)}
             </Card>

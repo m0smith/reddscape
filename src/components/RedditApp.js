@@ -1,7 +1,7 @@
 import { Settings } from '@mui/icons-material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import RedditCard from '../RedditCard';
+import RedditCard from './RedditCard';
 import RedditLayout from './RedditLayout';
 import SettingsModal from '../SettingsModal';
 import { AppBar, Toolbar } from '@mui/material';
