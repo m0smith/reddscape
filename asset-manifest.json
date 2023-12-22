@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/reddscape/static/css/main.2f5a0451.css",
-    "main.js": "/reddscape/static/js/main.54ee6729.js",
+    "main.js": "/reddscape/static/js/main.f0c1d126.js",
     "static/js/787.113434d6.chunk.js": "/reddscape/static/js/787.113434d6.chunk.js",
     "static/media/reddscape-logo.png": "/reddscape/static/media/reddscape-logo.963e0388c336b42c512b.png",
     "index.html": "/reddscape/index.html",
     "main.2f5a0451.css.map": "/reddscape/static/css/main.2f5a0451.css.map",
-    "main.54ee6729.js.map": "/reddscape/static/js/main.54ee6729.js.map",
+    "main.f0c1d126.js.map": "/reddscape/static/js/main.f0c1d126.js.map",
     "787.113434d6.chunk.js.map": "/reddscape/static/js/787.113434d6.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2f5a0451.css",
-    "static/js/main.54ee6729.js"
+    "static/js/main.f0c1d126.js"
   ]
 }
