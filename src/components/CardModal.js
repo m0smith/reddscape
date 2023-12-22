@@ -127,7 +127,7 @@ export default function CardModal({ post, open, handleClose }) {
                         >
                         {
                             items.map((item, i) => {
-                                console.log(item)
+                                // console.log(item)
                                 return (
                                     // <img
                                         

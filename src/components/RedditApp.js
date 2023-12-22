@@ -4,15 +4,19 @@ import React, { useEffect, useState } from 'react';
 import RedditCard from './RedditCard';
 import RedditLayout from './RedditLayout';
 import SettingsModal from '../SettingsModal';
-import { AppBar, FormControl, InputLabel, MenuItem, Select, TextField, Toolbar } from '@mui/material';
+import { AppBar, Button, FormControl, InputLabel, MenuItem, Select, TextField, Toolbar } from '@mui/material';
 import logo from '../assets/reddscape-logo.png'
+import SubredditInput from './SubredditInput';
+import { useNavigate } from 'react-router-dom';
 
 const RedditApp = ({ type, name, default_category }) => {
+
+    const navigate = useNavigate();
 
     const [posts, setPosts] = useState([]);
     // const [subreddit, setSubreddit] = useState('popular'); // Default subreddit
     const [category, setCategory] = useState(default_category); // Default category
-
+    const [_type, setType] = useState(type)
     const [after, setAfter] = useState(null); // To keep track of pagination
     const [isLoading, setIsLoading] = useState(false); // To manage loading state
     const [loadMore, setLoadMore] = useState(true);
@@ -21,41 +25,14 @@ const RedditApp = ({ type, name, default_category }) => {
     const [settings, setSettings] = useState({ nsfw: false })
 
 
-    if (name !== debouncedSubreddit) {
-        setLoadMore(false)
-        setDebouncedSubreddit(name)
-        setPosts([]);  // Reset posts
-        setAfter(null); // Reset pagination token
-
-        setIsLoading(false)
-        setLoadMore(true)
-    }
-
-    // console.log(subreddit + ' ' + debouncedSubreddit)
-
-    const debounce = (func, delay) => {
-        let inDebounce;
-        return function () {
-            const context = this;
-            const args = arguments;
-            clearTimeout(inDebounce);
-            inDebounce = setTimeout(() => func.apply(context, args), delay);
-        };
-    };
-
-
-    const handleSubredditChange = debounce((newSubreddit) => {
-        setDebouncedSubreddit(newSubreddit);
-    }, 500); // 500ms delay
-
     const includeNSFW = settings.nsfw
 
     useEffect(() => {
         console.log("useEffect:" + loadMore + " " + isLoading)
         if (loadMore && !isLoading) {
             setIsLoading(true);
-            console.log(type + ' ' + name)
-            axios.get(`https://www.reddit.com/${type}/${name}/${category}.json?after=${after}&show=all`)
+            console.log("Loading: " + _type + ' ' + debouncedSubreddit)
+            axios.get(`https://www.reddit.com/${_type}/${debouncedSubreddit}/${category}.json?after=${after}&show=all`)
                 .then(response => {
                     const newPosts = response.data.data.children
                         .map(obj => obj.data)
@@ -73,22 +50,19 @@ const RedditApp = ({ type, name, default_category }) => {
         }
     },
         // eslint-disable-next-line 
-        [debouncedSubreddit, category, settings, after, loadMore]); // Add includeNSFW as a dependency
+        [debouncedSubreddit, _type, category, settings, after, loadMore]); // Add includeNSFW as a dependency
 
 
 
-    const newSubreddit = (s) => {
-        console.log("newSubreddit")
+    const newSubreddit = (t, s) => {
         setLoadMore(false);
         setPosts([]);
         setAfter(null);
-        // setSubreddit(_ => s)
-        handleSubredditChange(s);
+        setDebouncedSubreddit(s)
+        setType(t)
         setIsLoading(false);
         setLoadMore(true);
-        // Reset posts
-        // Reset pagination token
-
+        navigate(`/${t}/${s}`, { replace: true });
     };
 
     // const handleNsfw = () => {
@@ -188,17 +162,11 @@ const RedditApp = ({ type, name, default_category }) => {
                 <Toolbar size="small">
                     <img src={logo} alt="Logo" style={{ marginRight: 10 }} height={50} />
 
-                    <TextField
-                        label={type === "r" ? "Subreddit" : "User"}
-                        value={name}
-                        size="small"
-                        onChange={(e) => newSubreddit(e.target.value)}
-                        style={{ width: '5em' }}
+                    <SubredditInput type={_type} name={debouncedSubreddit} newSubreddit={newSubreddit} />
 
-                    />
                     <FormControl size="small">
                         <InputLabel id="demo-simple-select-label">Order</InputLabel>
-                        <Select size="small" value={category} onChange={(e) => handleCategory(e.target.value)}>
+                        <Select size="small" value={category} label="Order" onChange={(e) => handleCategory(e.target.value)}>
                             <MenuItem value="hot">Hot</MenuItem>
                             <MenuItem value="new">New</MenuItem>
                             <MenuItem value="rising">Rising</MenuItem>
@@ -208,17 +176,17 @@ const RedditApp = ({ type, name, default_category }) => {
 
                         </Select>
                     </FormControl>
-            
-                <Settings onClick={handleOpenSettings} />
-                <SettingsModal settings={settings} handleClose={handleCloseSettings} open={openSettings} />
-            </Toolbar>
-        </AppBar >
+
+                    <Settings onClick={handleOpenSettings} />
+                    <SettingsModal settings={settings} handleClose={handleCloseSettings} open={openSettings} />
+                </Toolbar>
+            </AppBar >
             <RedditLayout>
                 {posts.map(post => {
                     return (<RedditCard post={post}></RedditCard>)
                 })}
             </RedditLayout>
-    { isLoading && <div>Loading more posts...</div> }
+            {isLoading && <div>Loading more posts...</div>}
         </>
     );
 };
