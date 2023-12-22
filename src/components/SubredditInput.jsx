@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Dialog, DialogContent, DialogContentText, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { Folder, Person } from '@mui/icons-material';
+import { Button, Dialog, DialogContent, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import React, { useState } from 'react';
 
 function SubredditInput({ type, name, newSubreddit }) {
     const [dialogOpen, setDialogOpen] = useState(false);

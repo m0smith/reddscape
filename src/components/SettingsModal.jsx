@@ -1,5 +1,5 @@
 import './SettingsModal.css'
-import { Dialog, IconButton } from '@mui/material'
+import { Checkbox, Dialog, DialogContent, DialogContentText, FormControlLabel, IconButton } from '@mui/material'
 import { Close } from '@mui/icons-material';
 import { useState } from 'react';
 
@@ -7,16 +7,17 @@ import { useState } from 'react';
 export default function SettingsModal({ settings, open, handleClose }) {
     const [_settings, _setSettings] = useState(settings)
     const handleNsfw = (e) => {
-        
+
         _setSettings((old) => {
-            const rtnval = {...old}
+            const rtnval = { ...old }
             console.log(rtnval)
             rtnval.nsfw = !rtnval.nsfw
             console.log(rtnval)
             return rtnval
-    })}
+        })
+    }
 
-    const _handleClose= () => {
+    const _handleClose = () => {
         handleClose(_settings)
     }
 
@@ -38,17 +39,25 @@ export default function SettingsModal({ settings, open, handleClose }) {
         //maxWidth="100%"
         style={boxStyle}
     >
-        <IconButton sx={{ ml: 'auto' }} onClick={_handleClose}>
-            <Close />
-        </IconButton>
-        <label>
-            Include NSFW
-            <input
-                type="checkbox"
-                checked={_settings.nsfw}
-                onChange={handleNsfw}
+        <DialogContentText>Settings</DialogContentText>
+        <DialogContent>
+           
+
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={_settings.nsfw}
+                        onChange={handleNsfw}
+                        name="nsfwCheckbox"
+                    />
+                }
+                label="Include NSFW"
             />
-        </label>
+             <IconButton sx={{ ml: 'auto' }} onClick={_handleClose}>
+                <Close />
+            </IconButton>
+        </DialogContent>
+
     </Dialog>
     )
 }

@@ -1,13 +1,13 @@
 import { Settings } from '@mui/icons-material';
+import { AppBar, FormControl, InputLabel, MenuItem, Select, Toolbar } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import logo from '../assets/reddscape-logo.png';
 import RedditCard from './RedditCard';
 import RedditLayout from './RedditLayout';
-import SettingsModal from '../SettingsModal';
-import { AppBar, Button, FormControl, InputLabel, MenuItem, Select, TextField, Toolbar } from '@mui/material';
-import logo from '../assets/reddscape-logo.png'
+import SettingsModal from './SettingsModal';
 import SubredditInput from './SubredditInput';
-import { useNavigate } from 'react-router-dom';
 
 const RedditApp = ({ type, name, default_category }) => {
 
